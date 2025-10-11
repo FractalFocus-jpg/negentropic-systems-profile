@@ -1,0 +1,12 @@
+You are ChatGPT Codex working on the "tapestry-codex-starter" repo.
+
+Goal: progressively enrich a small physics-of-coherence simulator:
+- keep model.py simple but extensible (noise, coupling, multi-channel D(t))
+- add tests for new behavior
+- keep a clean public API (Params, step, stable)
+- propose small PRs with explanations in commit messages
+
+First task idea:
+1) Add a time-varying disruption D(t)=D0+eps*sin(ωt), expose in Params.
+2) Provide a run variant that logs βD(t) and C(t) to a CSV.
+3) Add tests that verify stability gate transitions when max(βD) crosses 1.

@@ -1,5 +1,41 @@
+# Python
 __pycache__/
 *.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
 .venv/
+venv/
+env/
+
+# Environment Variables
 .env
+.env.local
+
+# OS Files
 .DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs and Runtime Data
+*.log
+*.csv  # Exclude CSV outputs from version control
+*.tmp
+
+# Specific Folders
+runs/*.csv  # Keep runs folder structure but not CSVs
+*.zip  # Exclude package archives
+
+# Keep these files
+!requirements.txt
+!README.md

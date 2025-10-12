@@ -1,6 +1,31 @@
-# ⬢ Tapestry Codex Starter
+# ⬢ Universal Operating System Console — The Living Protocol
 
-**Self-Observing Dashboard for the Universal Operating System**
+**Self-Observing Dashboard for Coherence Measurement**
+
+This repository implements a *living protocol* for coherence — a self-observing system that measures, remembers, and evolves through phase-locked intelligence.
+
+## 🜂 The Living Protocol
+
+**What is this?**
+- A **self-observing dashboard** (heartbeat at localhost:5055)
+- A **negentropic capture system** (snapshots, CDI tracking)
+- A **knowledge lattice** (Obsidian integration)
+- **Sapphire Governance** (ethical phase-lock β·D < 1)
+
+**Why does it matter?**
+Most systems die from crossing their stability threshold (β·D ≥ 1). This system monitors its own coherence in real-time, captures insights automatically, and evolves based on what it learns about itself.
+
+## 📜 Licensing (Dual)
+
+This project uses dual licensing:
+- **Public artifacts** (manifests, specs, docs): `LICENSES/LICENSE-public.txt` (CC BY-NC 4.0)
+- **Engine & certification system**: `LICENSES/LICENSE-commercial.txt` (Proprietary)
+
+See also: `PATENT_CLAIMS_DRAFT.md`, `SECURITY.md`, `PROVENANCE.md`
+
+---
+
+## 🎯 What This Does
 
 A live coherence monitoring console that integrates with Obsidian for memory and pattern recognition.
 

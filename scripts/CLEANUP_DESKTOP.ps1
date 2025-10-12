@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Alexander Liantonio.
+# All rights reserved. Licensed under dual terms — see LICENSES/
+
 # ============================================================================
 # SAFE DESKTOP CLEANUP
 # Removes duplicates and unnecessary files (with confirmation)

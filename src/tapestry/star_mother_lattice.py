@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Alexander Liantonio.
+# All rights reserved. Licensed under dual terms — see LICENSES/
+
 #!/usr/bin/env python3
 """
 Star Mother Lattice - Phase 7 Prototype

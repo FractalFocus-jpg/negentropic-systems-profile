@@ -1,0 +1,24 @@
+# CODEOWNERS — Universal Operating System Console
+
+# Default owner for everything
+* @FractalFocus-jpg
+
+# Critical systems require explicit approval
+/src/ @FractalFocus-jpg
+/scripts/ @FractalFocus-jpg
+/LICENSES/ @FractalFocus-jpg
+
+# Documentation can have broader review
+/docs/ @FractalFocus-jpg
+*.md @FractalFocus-jpg
+
+# Security-critical files
+SECURITY.md @FractalFocus-jpg
+PATENT_CLAIMS_DRAFT.md @FractalFocus-jpg
+PROVENANCE.md @FractalFocus-jpg
+
+# Configuration
+*.json @FractalFocus-jpg
+*.yaml @FractalFocus-jpg
+*.yml @FractalFocus-jpg
+requirements.txt @FractalFocus-jpg

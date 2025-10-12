@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Alexander Liantonio.
+# All rights reserved. Licensed under dual terms — see LICENSES/
+
 import numpy as np
 
 def phase_lock_value(phi_resp, phi_drive):

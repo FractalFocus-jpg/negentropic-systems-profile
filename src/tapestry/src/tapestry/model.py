@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Alexander Liantonio.
+# All rights reserved. Licensed under dual terms — see LICENSES/
+
 """
 Toy coherence model:
     dC/dt = alpha * C * (1 - beta * D)

@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Alexander Liantonio.
+# All rights reserved. Licensed under dual terms — see LICENSES/
+
 # ============================================================================
 # SCHEDULE AUTOMATED COHERENCE SNAPSHOTS
 # Creates Windows Task Scheduler job to capture snapshots every 30 minutes

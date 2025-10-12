@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Alexander Liantonio.
+# All rights reserved. Licensed under dual terms — see LICENSES/
+
 from .model import Params, step, stable
 from .metrics import phase_lock_value, synthetic_phases
 

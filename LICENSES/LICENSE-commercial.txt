@@ -1,0 +1,38 @@
+PROPRIETARY LICENSE — COMMERCIAL USE RESTRICTED
+
+Copyright (c) 2025 Alexander Liantonio. All rights reserved.
+
+This license applies to:
+- Self-Observing Dashboard engine (src/tapestry/self_observing_dashboard.py)
+- Star Mother Lattice visualization system
+- Coherence measurement algorithms and methods
+- CDI (Cognitive Drift Index) calculation system  
+- Certification apparatus and disruption thermometer
+- All scripts, automation tools, and processing pipelines
+
+TERMS:
+
+1. NO COMMERCIAL USE
+   You may NOT use this software or its derivatives for commercial purposes
+   without explicit written permission from the copyright holder.
+
+2. NO DERIVATIVES FOR DISTRIBUTION
+   You may NOT create derivative works for public distribution or commercial
+   sale without explicit written permission.
+
+3. CERTIFICATION REQUIRED
+   Any deployment in production systems requires certification from the
+   copyright holder verifying β·D stability compliance.
+
+4. STUDY & RESEARCH
+   You MAY study, analyze, and reference this code for non-commercial
+   research and educational purposes with proper attribution.
+
+5. WARRANTY DISCLAIMER
+   THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND.
+
+6. CONTACT
+   For licensing inquiries: alexl@users.noreply.github.com
+   For certification: Pending certification process definition
+
+This is a draft license pending formal legal review.

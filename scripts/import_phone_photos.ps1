@@ -1,251 +1,114 @@
-# ============================================================================
-# TAPESTRY PHONE PHOTO IMPORTER v1.0
-# SHA-256 De-duplication + EXIF-Based Organization
-# ============================================================================
+# Copyright (c) 2025 Alexander Liantonio.
+# All rights reserved. Licensed under dual terms — see LICENSES/.
 
 Param(
-    [string]$SourcePath = "",  # Auto-detect or provide manually
-    [string]$VaultMedia = "C:\Users\alexl\the living tapestry\media\photos",
-    [switch]$DryRun = $false
+  [string]$Source = "C:\Users\alexl\Pictures\Your Phone\DCIM",
+  [string]$Target = "C:\Users\alexl\the living tapestry\media\photos",
+  [string]$Manifest = "C:\Users\alexl\the living tapestry\media\photos\manifest.csv"
 )
 
-# ANSI Colors
-$GREEN = "`e[32m"
-$YELLOW = "`e[33m"
-$BLUE = "`e[36m"
-$RED = "`e[31m"
-$RESET = "`e[0m"
+Write-Host "=== DCIM Photo Import with SHA-256 De-duplication ===" -ForegroundColor Cyan
 
-Write-Host "${BLUE}═══════════════════════════════════════════${RESET}"
-Write-Host "${BLUE}  TAPESTRY PHONE PHOTO IMPORTER${RESET}"
-Write-Host "${BLUE}═══════════════════════════════════════════${RESET}"
-Write-Host ""
-
-# ============================================================================
-# STEP 1: AUTO-DETECT PHONE DCIM PATH
-# ============================================================================
-
-if ([string]::IsNullOrEmpty($SourcePath)) {
-    Write-Host "${YELLOW}[AUTO-DETECT]${RESET} Searching for phone DCIM folder..."
-    
-    $candidates = @(
-        "C:\Users\$env:USERNAME\Pictures\Your Phone\DCIM",
-        "C:\Users\$env:USERNAME\Pictures\Camera Roll",
-        "C:\Users\$env:USERNAME\OneDrive\Pictures\Camera Roll"
-    )
-    
-    # Check for MTP mounted phone
-    $shell = New-Object -ComObject Shell.Application
-    $computer = $shell.NameSpace(17)  # My Computer
-    
-    foreach ($item in $computer.Items()) {
-        if ($item.IsFolder -and $item.Name -match "Phone|Android|iPhone|Galaxy") {
-            $phonePath = $item.Path
-            $dcimCandidate = Join-Path $phonePath "Internal storage\DCIM"
-            if (Test-Path $dcimCandidate) {
-                $candidates += $dcimCandidate
-            }
-        }
+# Auto-detect source path with fallbacks
+if (!(Test-Path $Source)) {
+  Write-Host "Primary path not found: $Source" -ForegroundColor Yellow
+  $fallbacks = @(
+    "C:\Users\alexl\Pictures\Camera Roll",
+    "C:\Users\alexl\Pictures\Your Phone\Internal Storage\DCIM"
+  )
+  foreach ($p in $fallbacks) {
+    if (Test-Path $p) {
+      $Source = $p
+      Write-Host "Using fallback: $Source" -ForegroundColor Green
+      break
     }
-    
-    # Find first valid path
-    foreach ($candidate in $candidates) {
-        if (Test-Path $candidate) {
-            $SourcePath = $candidate
-            Write-Host "${GREEN}✓ Found:${RESET} $SourcePath"
-            break
-        }
-    }
-    
-    if ([string]::IsNullOrEmpty($SourcePath)) {
-        Write-Host "${RED}✗ ERROR:${RESET} No phone DCIM folder detected."
-        Write-Host ""
-        Write-Host "${YELLOW}OPTIONS:${RESET}"
-        Write-Host "  1. Connect phone via USB and enable File Transfer (MTP)"
-        Write-Host "  2. Set up Phone Link: ms-settings:mobile-devices"
-        Write-Host "  3. Provide custom path: -SourcePath 'D:\DCIM'"
-        Write-Host ""
-        exit 1
-    }
-}
-
-if (-not (Test-Path $SourcePath)) {
-    Write-Host "${RED}✗ ERROR:${RESET} Source path does not exist: $SourcePath"
+  }
+  if (!(Test-Path $Source)) {
+    Write-Host "ERROR: No valid source path found!" -ForegroundColor Red
     exit 1
+  }
 }
 
-# ============================================================================
-# STEP 2: COLLECT ALL PHOTOS FROM SOURCE
-# ============================================================================
-
-Write-Host ""
-Write-Host "${YELLOW}[SCAN]${RESET} Collecting photos from source..."
-
-$imageExtensions = @("*.jpg", "*.jpeg", "*.png", "*.gif", "*.heic", "*.webp", "*.bmp")
-$allPhotos = @()
-
-foreach ($ext in $imageExtensions) {
-    $allPhotos += Get-ChildItem -Path $SourcePath -Filter $ext -Recurse -ErrorAction SilentlyContinue
+# Ensure target directory exists
+if (!(Test-Path $Target)) {  New-Item -ItemType Directory -Path $Target -Force | Out-Null
 }
 
-Write-Host "${GREEN}✓ Found:${RESET} $($allPhotos.Count) photos"
-
-if ($allPhotos.Count -eq 0) {
-    Write-Host "${YELLOW}⚠ No photos to import.${RESET}"
-    exit 0
+# Initialize manifest if missing
+if (!(Test-Path $Manifest)) {
+  "hash,src,name,ts,exif_date" | Out-File -FilePath $Manifest -Encoding utf8
+  Write-Host "Created new manifest: $Manifest" -ForegroundColor Green
 }
 
-# ============================================================================
-# STEP 3: BUILD HASH REGISTRY OF EXISTING VAULT PHOTOS
-# ============================================================================
+# Load System.Drawing for EXIF extraction
+Add-Type -AssemblyName System.Drawing
 
-Write-Host ""
-Write-Host "${YELLOW}[HASH]${RESET} Building deduplication registry..."
-
-$existingHashes = @{}
-
-if (Test-Path $VaultMedia) {
-    $existingPhotos = Get-ChildItem -Path $VaultMedia -Recurse -File -ErrorAction SilentlyContinue
-    
-    foreach ($photo in $existingPhotos) {
-        try {
-            $hash = (Get-FileHash -Path $photo.FullName -Algorithm SHA256).Hash
-            $existingHashes[$hash] = $photo.FullName
-        } catch {
-            # Skip files that can't be hashed
-        }
+function Get-ExifDate($path) {
+  try {
+    $img = [System.Drawing.Image]::FromFile($path)
+    $prop = $img.PropertyItems | Where-Object { $_.Id -eq 0x9003 } # DateTimeOriginal
+    if ($prop) {
+      $txt = ([System.Text.Encoding]::ASCII.GetString($prop.Value)).Trim([char]0)
+      $img.Dispose()
+      return [datetime]::ParseExact($txt,"yyyy:MM:dd HH:mm:ss",$null)
+    } else {
+      $img.Dispose()
+      return $null
     }
+  } catch {
+    return $null
+  }
 }
 
-Write-Host "${GREEN}✓ Registry:${RESET} $($existingHashes.Count) existing photos indexed"
-
-# ============================================================================
-# STEP 4: IMPORT NEW PHOTOS (DE-DUPLICATED)
-# ============================================================================
-
-Write-Host ""
-Write-Host "${YELLOW}[IMPORT]${RESET} Processing photos..."
-
+Write-Host "Scanning source: $Source" -ForegroundColor Cyan
 $imported = 0
 $skipped = 0
-$errors = 0
-
-foreach ($photo in $allPhotos) {
-    try {
-        # Calculate SHA-256
-        $hash = (Get-FileHash -Path $photo.FullName -Algorithm SHA256).Hash
-        
-        # Check if already exists
-        if ($existingHashes.ContainsKey($hash)) {
-            $skipped++
-            Write-Host "  ${BLUE}⊘${RESET} Skip: $($photo.Name) (duplicate)"
-            continue
-        }
-        
-        # Get date taken (from EXIF or file modified date)
-        $dateTaken = $photo.LastWriteTime
-        
-        # Organize: YYYY/YYYY-MM/
-        $year = $dateTaken.ToString("yyyy")
-        $month = $dateTaken.ToString("yyyy-MM")
-        $destFolder = Join-Path $VaultMedia "$year\$month"
-        
-        # Ensure folder exists
-        if (-not (Test-Path $destFolder)) {
-            if (-not $DryRun) {
-                New-Item -ItemType Directory -Path $destFolder -Force | Out-Null
-            }
-        }
-        
-        # Destination path
-        $destPath = Join-Path $destFolder $photo.Name
-        
-        # Handle name collisions
-        $counter = 1
-        while (Test-Path $destPath) {
-            $baseName = [System.IO.Path]::GetFileNameWithoutExtension($photo.Name)
-            $extension = $photo.Extension
-            $destPath = Join-Path $destFolder "$baseName-$counter$extension"
-            $counter++
-        }
-        
-        # Copy file
-        if ($DryRun) {
-            Write-Host "  ${GREEN}✓${RESET} Would import: $($photo.Name) → $month"
-        } else {
-            Copy-Item -Path $photo.FullName -Destination $destPath -Force
-            Write-Host "  ${GREEN}✓${RESET} Imported: $($photo.Name) → $month"
-        }
-        
-        $imported++
-        
-    } catch {
-        $errors++
-        Write-Host "  ${RED}✗${RESET} Error: $($photo.Name) - $($_.Exception.Message)"
+Get-ChildItem -Path $Source -Recurse -Include *.jpg,*.jpeg,*.png,*.heic,*.mp4,*.mov -ErrorAction SilentlyContinue | ForEach-Object {
+  $f = $_.FullName
+  Write-Host "Processing: $($_.Name)" -NoNewline
+  
+  try {
+    # Calculate SHA-256 hash
+    $sha = (Get-FileHash -Algorithm SHA256 -Path $f).Hash
+    
+    # Quick de-dupe check in manifest
+    if (Select-String -Path $Manifest -Pattern $sha -Quiet) {
+      Write-Host " [SKIP - duplicate]" -ForegroundColor Yellow
+      $skipped++
+      return
     }
-}
 
-# ============================================================================
-# STEP 5: GENERATE SUMMARY
-# ============================================================================
-
-Write-Host ""
-Write-Host "${BLUE}═══════════════════════════════════════════${RESET}"
-Write-Host "${BLUE}  IMPORT SUMMARY${RESET}"
-Write-Host "${BLUE}═══════════════════════════════════════════${RESET}"
-Write-Host ""
-Write-Host "  Source: $SourcePath"
-Write-Host "  Destination: $VaultMedia"
-Write-Host ""
-Write-Host "  ${GREEN}Imported:${RESET} $imported"
-Write-Host "  ${BLUE}Skipped:${RESET}  $skipped (duplicates)"
-Write-Host "  ${RED}Errors:${RESET}   $errors"
-Write-Host ""
-
-if ($DryRun) {
-    Write-Host "${YELLOW}[DRY RUN]${RESET} No files were actually copied."
-    Write-Host "Run without -DryRun to perform import."
-} else {
-    Write-Host "${GREEN}✓ Import complete!${RESET}"
-}
-
-# ============================================================================
-# STEP 6: UPDATE VAULT LOGS
-# ============================================================================
-
-if (-not $DryRun -and $imported -gt 0) {
-    $logDate = Get-Date -Format "yyyy-MM-dd"
-    $logTime = Get-Date -Format "HH:mm:ss"
-    $logFile = "C:\Users\alexl\the living tapestry\systems\logs\$logDate.md"
+    # Extract EXIF date or use file date
+    $ex = Get-ExifDate $f
+    if (!$ex) { $ex = $_.LastWriteTime }
     
-    # Ensure log exists
-    if (-not (Test-Path $logFile)) {
-        @"
----
-type: daily_ops
-date: $logDate
----
-
-# Daily Operations — $logDate
-
-"@ | Out-File -FilePath $logFile -Encoding UTF8
+    # Generate year/month folder structure
+    $year = $ex.ToString("yyyy")
+    $month = $ex.ToString("yyyy-MM")
+    $outDir = Join-Path $Target "$year\$month"
+    
+    if (!(Test-Path $outDir)) {
+      New-Item -ItemType Directory -Path $outDir | Out-Null
     }
-    
-    # Append media import entry
-    @"
 
-## [MEDIA IMPORT] — $logTime
-- **Source**: ``$SourcePath``
-- **Imported**: $imported new photos
-- **Skipped**: $skipped duplicates
-- **Errors**: $errors
-- **Destination**: ``$VaultMedia``
-- **Method**: SHA-256 deduplication
-
-"@ | Add-Content -Path $logFile -Encoding UTF8
+    # Generate unique filename with timestamp + hash prefix
+    $name = "{0}_{1}{2}" -f $ex.ToString("yyyyMMdd_HHmmss"), $sha.Substring(0,8), $_.Extension
+    $destPath = Join-Path $outDir $name    
+    # Copy file to vault
+    Copy-Item -Path $f -Destination $destPath -Force
     
-    Write-Host ""
-    Write-Host "${GREEN}✓ Logged to:${RESET} systems\logs\$logDate.md"
+    # Log to manifest
+    "$sha,$f,$name,$([DateTime]::UtcNow.ToString('u')),$($ex.ToString('u'))" | Add-Content $Manifest -Encoding utf8
+    
+    Write-Host " [IMPORTED]" -ForegroundColor Green
+    $imported++
+    
+  } catch {
+    Write-Host " [ERROR: $($_.Exception.Message)]" -ForegroundColor Red
+  }
 }
 
-Write-Host ""
+Write-Host "`n=== Import Complete ===" -ForegroundColor Cyan
+Write-Host "Imported: $imported new files" -ForegroundColor Green
+Write-Host "Skipped: $skipped duplicates" -ForegroundColor Yellow
+Write-Host "Target: $Target" -ForegroundColor Cyan
+Write-Host "Manifest: $Manifest" -ForegroundColor Cyan

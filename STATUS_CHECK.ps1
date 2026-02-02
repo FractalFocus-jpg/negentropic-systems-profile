@@ -80,7 +80,12 @@ $oauthStatus = @{
 
 if (Test-Path $envFile) {
     $envContent = Get-Content $envFile -Raw
-    $oauthStatus.google = $envContent -match "GMAIL_CLIENT_ID=.+\w"
+
+    # Google is only considered configured if OFFLINE refresh tokens exist (not just client id/secret)
+    $hasGoogleClient = ($envContent -match "GMAIL_CLIENT_ID=.+\w") -and ($envContent -match "GDRIVE_CLIENT_ID=.+\w")
+    $hasGoogleRefresh = ($envContent -match "GMAIL_REFRESH_TOKEN=.+\w") -and ($envContent -match "GDRIVE_REFRESH_TOKEN=.+\w") -and ($envContent -match "GCAL_REFRESH_TOKEN=.+\w")
+    $oauthStatus.google = $hasGoogleClient -and $hasGoogleRefresh
+
     $oauthStatus.tiktok = $envContent -match "TIKTOK_CLIENT_KEY=.+\w"
     $oauthStatus.instagram = $envContent -match "IG_APP_ID=.+\w"
 }
@@ -91,6 +96,8 @@ $status.metrics.oauth_configured = "$oauthCount/3"
 
 if ($oauthCount -eq 0) {
     $status.recommendations += "Configure OAuth: .\scripts\auth\OAUTH_WIZARD.ps1"
+} elseif (-not $oauthStatus.google) {
+    $status.recommendations += "Google OAuth incomplete: generate refresh tokens (offline access): .\GENERATE_GOOGLE_TOKENS.ps1"
 }
 
 # Check Scheduled Tasks

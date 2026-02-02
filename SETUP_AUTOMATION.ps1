@@ -40,7 +40,7 @@ $tasks = @(
     },
     @{
         Name = "TapestrySentinelAudit"
-        Description = "Security & health audit (every 6 hours)"
+        Description = "Security and health audit (every 6 hours)"
         Script = "scripts\agents\sentinel.ps1"
         Trigger = "HOURLY"
         Interval = 6
@@ -135,7 +135,10 @@ Write-Host "`n📊 Active Tapestry Tasks:" -ForegroundColor Cyan
 foreach ($task in $tapestryTasks) {
     Write-Host "   ✅ $($task.TaskName)" -ForegroundColor Green
     Write-Host "      Status: $($task.Status)" -ForegroundColor Gray
-    Write-Host "      Next Run: $($task.'Next Run Time')" -ForegroundColor DarkGray
+    $nextRun = $task | Select-Object -ExpandProperty "Next Run Time" -ErrorAction SilentlyContinue
+    if ($nextRun) {
+        Write-Host "      Next Run: $nextRun" -ForegroundColor DarkGray
+    }
 }
 
 Write-Host "`n✅ Automation setup complete!" -ForegroundColor Green

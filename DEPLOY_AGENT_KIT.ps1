@@ -147,7 +147,7 @@ if (!$Initialize -and !$TestAll -and !$StartMonitoring) {
     Write-Host "   Test All: -TestAll" -ForegroundColor Gray
     Write-Host "   Start Monitoring: -StartMonitoring" -ForegroundColor Gray
     
-    Write-Host "`n📖 Documentation:" -ForegroundColor Cyan
+    Write-Host "`nDocumentation:" -ForegroundColor Cyan
     Write-Host "   Agent Kit Bridge: scripts\agent-kit\bridge.ps1" -ForegroundColor Gray
     Write-Host "   Notifications: scripts\notify.ps1" -ForegroundColor Gray
     Write-Host "   AI Mesh: scripts\agent-kit\ai_mesh.ps1" -ForegroundColor Gray

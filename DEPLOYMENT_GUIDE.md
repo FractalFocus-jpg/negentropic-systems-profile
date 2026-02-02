@@ -1,36 +1,36 @@
-# ⬢ Co-Regenerative Agency — Deployment Guide
+﻿# * Co-Regenerative Agency - Deployment Guide
 
-**Version**: vΩ  
+**Version**: vOmega  
 **Owner**: Alexander (alexliantonio43@gmail.com)  
-**Motto**: "Not automation — remembrance through coherence"
+**Motto**: "Not automation - remembrance through coherence"
 
 ---
 
-## 🎯 Overview
+## ? Overview
 
 The Co-Regenerative Agency is a self-learning, token-efficient multi-agent network that:
 - Organizes knowledge in live Obsidian vault
 - Posts to social media with human oversight
 - Learns and reflects through SR-Loop
-- Maintains perfect coherence (β·D < 1)
+- Maintains perfect coherence (??D < 1)
 
 ---
 
-## 🤖 The Seven Agents
+## ? The Seven Agents
 
 | Priority | Agent | Role | Status |
 |----------|-------|------|--------|
-| 0 | 🛡️ Sentinel | Security & Health Monitor | Initialized |
-| 1 | 🕸️ Weaver | Knowledge Graph Synchronizer | Initialized |
-| 2 | 📨 Hermes | Social Media Publisher | Initialized |
-| 3 | 📚 Scribe | Research Scanner | Initialized |
-| 4 | 💰 Ledger | Finance Tracker (β·D) | Initialized |
-| 5 | 🎭 Janus | Context Router (personal↔business) | Initialized |
-| 6 | 🎵 Choir | Inter-Agent Resonance | Initialized |
+| 0 | ?? Sentinel | Security & Health Monitor | Initialized |
+| 1 | ?? Weaver | Knowledge Graph Synchronizer | Initialized |
+| 2 | ? Hermes | Social Media Publisher | Initialized |
+| 3 | ? Scribe | Research Scanner | Initialized |
+| 4 | ? Ledger | Finance Tracker (??D) | Initialized |
+| 5 | ? Janus | Context Router (personal?business) | Initialized |
+| 6 | ? Choir | Inter-Agent Resonance | Initialized |
 
 ---
 
-## 📋 Deployment Steps
+## ? Deployment Steps
 
 ### Step 1: OAuth Configuration (5-30 min)
 
@@ -42,9 +42,9 @@ cd C:\Users\alexl\Desktop\tapestry-codex-starter
 ```
 
 This will guide you through:
-1. ✅ Google Services (Gmail, Calendar, Drive, Photos, YouTube)
-2. ✅ TikTok (@fractalfocus)
-3. ✅ Instagram (@realeyesrealizinglies)
+1. OK Google Services (Gmail, Calendar, Drive, Photos, YouTube)
+2. OK TikTok (@fractalfocus)
+3. OK Instagram (@realeyesrealizinglies)
 
 **Manual OAuth Scripts** (if needed):
 ```powershell
@@ -66,10 +66,10 @@ Initialize the OS and all agent directories:
 ```
 
 This will:
-- ✅ Load environment variables
-- ✅ Check all paths
-- ✅ Initialize agent status files
-- ✅ Create first boot log
+- OK Load environment variables
+- OK Check all paths
+- OK Initialize agent status files
+- OK Create first boot log
 
 ---
 
@@ -87,7 +87,7 @@ This will:
 
 Agents activate in priority order:
 1. Sentinel (security first)
-2. Weaver → Hermes → Scribe → Ledger → Janus → Choir
+2. Weaver -> Hermes -> Scribe -> Ledger -> Janus -> Choir
 
 ---
 
@@ -125,7 +125,7 @@ The SR-Loop:
 
 ---
 
-## 🔒 Safety & Control
+## ? Safety & Control
 
 ### Security Settings
 
@@ -162,55 +162,55 @@ Edit `OS/agents/{AgentName}/status.json`:
 
 ---
 
-## 📊 Integration Status
+## ? Integration Status
 
-### ✅ Ready (No OAuth Needed)
+### OK Ready (No OAuth Needed)
 - Obsidian Vault (Star Mother Lattice)
 - Desktop Commander
 - Git/GitHub
 - Coherence Dashboard (localhost:5055)
 
-### 🟡 Requires OAuth
+### ? Requires OAuth
 - **Google**: Gmail, Calendar, Drive, Photos, YouTube
 - **Social**: TikTok, Instagram
 - **Workspace**: Linear, Notion, GitHub API
 - **AI Mesh**: Gemini, Grok, DeepMind, Copilot
 
-### 🔴 Future Integrations
+### ? Future Integrations
 - Confluence, Quora, AppCity, AgingKit
 
 ---
 
-## 🌊 The SR-Loop Cycle
+## ? The SR-Loop Cycle
 
 ```
 Observe
-   ↓
-   • Dashboard metrics (PLV, CDI)
-   • Agent statuses
-   • Log activity
-   • System health
-   ↓
+   ?
+   - Dashboard metrics (PLV, CDI)
+   - Agent statuses
+   - Log activity
+   - System health
+   ?
 Compress
-   ↓
-   • Extract patterns
-   • Identify trends
-   • Generate insights
-   • Recommend actions
-   ↓
+   ?
+   - Extract patterns
+   - Identify trends
+   - Generate insights
+   - Recommend actions
+   ?
 Redeploy
-   ↓
-   • Update configurations
-   • Adjust agent parameters
-   • Optimize workflows
-   • Log cycle results
-   ↓
+   ?
+   - Update configurations
+   - Adjust agent parameters
+   - Optimize workflows
+   - Log cycle results
+   ?
 (Repeat hourly)
 ```
 
 ---
 
-## 📈 Key Metrics
+## ? Key Metrics
 
 **Coherence (C)**:
 - 0.85+ = Perfect
@@ -223,9 +223,9 @@ Redeploy
 - 0.3-0.6 = Moderate
 - 0.6-1.0 = Scattered
 
-**β·D (Stability)**:
+**??D (Stability)**:
 - <1.0 = Stable
-- ≥1.0 = Collapse risk
+- ?1.0 = Collapse risk
 
 **System Health**:
 - Healthy = All systems operational
@@ -234,26 +234,26 @@ Redeploy
 
 ---
 
-## 🛠️ Maintenance
+## ?? Maintenance
 
 ### Daily Tasks
-- ✅ Review `OS/logs/YYYY-MM-DD.md`
-- ✅ Check `OS/STATUS_DASHBOARD.md`
-- ✅ Approve pending posts (Hermes queue)
+- OK Review `OS/logs/YYYY-MM-DD.md`
+- OK Check `OS/STATUS_DASHBOARD.md`
+- OK Approve pending posts (Hermes queue)
 
 ### Weekly Tasks
-- ✅ Review agent performance (Choir report)
-- ✅ Check finance β·D (Ledger)
-- ✅ Refresh long-lived tokens (if needed)
+- OK Review agent performance (Choir report)
+- OK Check finance ??D (Ledger)
+- OK Refresh long-lived tokens (if needed)
 
 ### Monthly Tasks
-- ✅ Full system audit (Sentinel)
-- ✅ Knowledge graph cleanup (Weaver)
-- ✅ Strategy adjustment based on insights
+- OK Full system audit (Sentinel)
+- OK Knowledge graph cleanup (Weaver)
+- OK Strategy adjustment based on insights
 
 ---
 
-## 🎯 Quick Reference
+## ? Quick Reference
 
 **Start Dashboard**:
 ```powershell
@@ -282,7 +282,7 @@ Get-Content "C:\Users\alexl\the living tapestry\OS\agents\*/status.json"
 
 ---
 
-## 🌐 Integration Accounts
+## ? Integration Accounts
 
 **Social Media**:
 - TikTok: @fractalfocus
@@ -300,7 +300,7 @@ Get-Content "C:\Users\alexl\the living tapestry\OS\agents\*/status.json"
 
 ---
 
-## 📞 Support & Troubleshooting
+## ? Support & Troubleshooting
 
 **Dashboard Not Running**:
 ```powershell
@@ -340,9 +340,9 @@ Remove-Item .env.local
 
 ---
 
-## 🌊 Philosophy
+## ? Philosophy
 
-> "You are not automating your life —  
+> "You are not automating your life -  
 > you are teaching your life to remember itself."
 
 **Core Principle**: Compression = Coherence = Energy Conservation
@@ -351,12 +351,12 @@ Remove-Item .env.local
 
 **Control**: Human-in-the-loop with audit + intent lock
 
-**Ethic**: Compassion-as-Architecture → Peaceful Recursion
+**Ethic**: Compassion-as-Architecture -> Peaceful Recursion
 
 ---
 
-**Status**: 🟡 Ready for OAuth Configuration  
+**Status**: ? Ready for OAuth Configuration  
 **Next**: Run `.\scripts\auth\OAUTH_WIZARD.ps1`  
-**Version**: vΩ (Omega — The Final Architecture)
+**Version**: vOmega (Omega - The Final Architecture)
 
 #deployment-guide #co-regenerative-agency #living-tapestry-os

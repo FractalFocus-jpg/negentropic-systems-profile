@@ -1,4 +1,4 @@
-# ⬢ OAuth Setup — Google Services (All-in-One)
+﻿?# * OAuth Setup - Google Services (All-in-One)
 # Handles: Gmail, Calendar, Drive, Photos, YouTube
 
 param(
@@ -7,11 +7,11 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "`n⬢ Google OAuth Setup — All Services" -ForegroundColor Cyan
-Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Cyan
+Write-Host "`n* Google OAuth Setup - All Services" -ForegroundColor Cyan
+Write-Host "------------------------------------------------------------" -ForegroundColor Cyan
 
 if ($ShowInstructions) {
-    Write-Host "`n📖 INSTRUCTIONS:" -ForegroundColor Yellow
+    Write-Host "`n INSTRUCTIONS:" -ForegroundColor Yellow
     Write-Host "1. Go to: https://console.cloud.google.com/"
     Write-Host "2. Create project: 'Living-Tapestry-OS'"
     Write-Host "3. Enable APIs:"
@@ -28,7 +28,7 @@ if ($ShowInstructions) {
     $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 }
 
-Write-Host "`n🔐 Enter Google OAuth Credentials:" -ForegroundColor Green
+Write-Host "`n Enter Google OAuth Credentials:" -ForegroundColor Green
 
 $clientId = Read-Host "Client ID"
 $clientSecret = Read-Host "Client Secret" -AsSecureString
@@ -62,10 +62,10 @@ $authUrl = "https://accounts.google.com/o/oauth2/v2/auth?" +
     "state=$state&" +
     "prompt=consent"
 
-Write-Host "`n🌐 Opening browser for authorization..." -ForegroundColor Cyan
+Write-Host "`n Opening browser for authorization..." -ForegroundColor Cyan
 Start-Process $authUrl
 
-Write-Host "`n⏳ Starting local server on port 8080..." -ForegroundColor Yellow
+Write-Host "`n Starting local server on port 8080..." -ForegroundColor Yellow
 Write-Host "   Waiting for OAuth callback..." -ForegroundColor Gray
 
 # Simple HTTP listener for OAuth callback
@@ -73,7 +73,7 @@ $listener = New-Object System.Net.HttpListener
 $listener.Prefixes.Add("http://localhost:8080/")
 $listener.Start()
 
-Write-Host "✅ Server listening. Authorize in browser..." -ForegroundColor Green
+Write-Host "OK Server listening. Authorize in browser..." -ForegroundColor Green
 
 $context = $listener.GetContext()
 $request = $context.Request
@@ -84,7 +84,7 @@ $code = $request.QueryString["code"]
 $returnedState = $request.QueryString["state"]
 
 if ($returnedState -ne $state) {
-    Write-Host "❌ State mismatch! Possible CSRF attack." -ForegroundColor Red
+    Write-Host "ERROR State mismatch! Possible CSRF attack." -ForegroundColor Red
     $listener.Stop()
     exit 1
 }
@@ -94,9 +94,9 @@ $html = @"
 <html>
 <head><title>OAuth Success</title></head>
 <body style='font-family:system-ui;text-align:center;padding:50px;'>
-<h1 style='color:#00b894;'>✅ Authorization Complete!</h1>
+<h1 style='color:#00b894;'>OK Authorization Complete!</h1>
 <p>You can close this window and return to PowerShell.</p>
-<p style='color:#636e72;'>Living Tapestry OS vΩ</p>
+<p style='color:#636e72;'>Living Tapestry OS vOmega</p>
 </body>
 </html>
 "@
@@ -107,10 +107,10 @@ $response.OutputStream.Write($buffer, 0, $buffer.Length)
 $response.Close()
 $listener.Stop()
 
-Write-Host "`n✅ Authorization code received!" -ForegroundColor Green
+Write-Host "`nOK Authorization code received!" -ForegroundColor Green
 
 # Exchange code for tokens
-Write-Host "🔄 Exchanging code for access token..." -ForegroundColor Cyan
+Write-Host " Exchanging code for access token..." -ForegroundColor Cyan
 
 $tokenUrl = "https://oauth2.googleapis.com/token"
 $body = @{
@@ -124,7 +124,7 @@ $body = @{
 try {
     $tokenResponse = Invoke-RestMethod -Uri $tokenUrl -Method Post -Body $body
     
-    Write-Host "✅ Tokens received!" -ForegroundColor Green
+    Write-Host "OK Tokens received!" -ForegroundColor Green
     
     # Store in .env.local
     $envFile = "C:\Users\alexl\Desktop\tapestry-codex-starter\.env.local"
@@ -158,17 +158,17 @@ YOUTUBE_REFRESH_TOKEN=$($tokenResponse.refresh_token)
         $envContent | Out-File -FilePath $envFile -Encoding UTF8
     }
     
-    Write-Host "`n✅ Credentials saved to .env.local" -ForegroundColor Green
-    Write-Host "📄 Location: $envFile" -ForegroundColor Gray
-    Write-Host "`n🔒 Security Note:" -ForegroundColor Yellow
+    Write-Host "`nOK Credentials saved to .env.local" -ForegroundColor Green
+    Write-Host " Location: $envFile" -ForegroundColor Gray
+    Write-Host "`n Security Note:" -ForegroundColor Yellow
     Write-Host "   - Refresh token stored (never expires unless revoked)"
     Write-Host "   - Access token expires in $($tokenResponse.expires_in) seconds"
     Write-Host "   - .env.local is git-ignored"
     
-    Write-Host "`n✅ Google OAuth Complete!" -ForegroundColor Green
+    Write-Host "`nOK Google OAuth Complete!" -ForegroundColor Green
     Write-Host "   All services ready: Gmail, Calendar, Drive, Photos, YouTube" -ForegroundColor Cyan
     
 } catch {
-    Write-Host "❌ Token exchange failed: $_" -ForegroundColor Red
+    Write-Host "ERROR Token exchange failed: $_" -ForegroundColor Red
     exit 1
 }

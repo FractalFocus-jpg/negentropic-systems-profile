@@ -31,14 +31,20 @@ foreach ($agentDir in $agentDirs) {
     if (Test-Path $statusFile) {
         $status = Get-Content $statusFile | ConvertFrom-Json
         
-        # Update status to active
+        # Update status to active (use agent field if name/priority not present)
         $status.status = "active"
-        $status.timestamp = (Get-Date).ToString("o")
-        $status.health = "running"
-        
-        $status | ConvertTo-Json -Depth 4 | Out-File -FilePath $statusFile -Encoding UTF8
-        
-        Write-Host "[$($status.priority)/7] $($status.name) - ACTIVE" -ForegroundColor Green
+        $status.enabled = $true
+        $status.dryrun = $false
+
+        # Add fields safely
+        try { $status | Add-Member -NotePropertyName "timestamp" -NotePropertyValue ((Get-Date).ToString("o")) -Force } catch {}
+        try { $status | Add-Member -NotePropertyName "health" -NotePropertyValue "running" -Force } catch {}
+
+        $status | ConvertTo-Json -Depth 6 | Out-File -FilePath $statusFile -Encoding UTF8
+
+        $agentName = if ($status.name) { $status.name } elseif ($status.agent) { $status.agent } else { $agentDir.Name }
+        $prio = if ($status.priority) { $status.priority } else { "?" }
+        Write-Host "[$prio/7] $agentName - ACTIVE" -ForegroundColor Green
     }
 }
 

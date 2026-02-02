@@ -25,6 +25,12 @@ secrets/
 *.token
 *.refresh
 
+# Local backups / runtime configs
+*.bak_*
+script*/**/*.bak_*
+bridge_config.json
+scripts/agent-kit/bridge_config.json
+
 # OS Files
 .DS_Store
 Thumbs.db

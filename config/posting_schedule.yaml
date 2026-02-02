@@ -1,0 +1,20 @@
+instagram:
+  resonantroot:
+    mode: AUTO
+    cadence: "2/day"
+    hours: [10, 20]
+    max_per_day: 3
+  newilluminati:
+    mode: REVIEW
+    cadence: "1/day"
+  realeyesrealizinglies:
+    mode: REVIEW
+    cadence: "1/day"
+
+tiktok:
+  mode: REVIEW
+  max_per_day: 5
+
+youtube:
+  mode: REVIEW
+  max_per_day: 2

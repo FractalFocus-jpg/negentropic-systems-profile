@@ -1,0 +1,9 @@
+{
+  "steps": 80,
+  "n": 32,
+  "seed": 1,
+  "coupling": 0.8,
+  "noise": 0.02,
+  "return_ramp": 0.01,
+  "alpha": 0.2
+}

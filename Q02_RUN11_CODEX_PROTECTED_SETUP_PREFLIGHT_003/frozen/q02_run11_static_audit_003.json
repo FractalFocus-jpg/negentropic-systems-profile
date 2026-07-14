@@ -1,0 +1,36 @@
+{
+  "id": "Q02_RUN11_STATIC_AUDIT_003",
+  "permitted_authenticated_invocations_exact_order": [
+    "ARCX.symbology.resolve",
+    "ARCX.metadata.get_dataset_condition",
+    "ARCX.metadata.get_cost",
+    "ARCX.metadata.get_record_count",
+    "ARCX.metadata.get_billable_size",
+    "GLBX.symbology.resolve",
+    "GLBX.metadata.get_dataset_condition",
+    "GLBX.metadata.get_cost",
+    "GLBX.metadata.get_record_count",
+    "GLBX.metadata.get_billable_size"
+  ],
+  "prohibited_databento_methods": [
+    "metadata.list_datasets",
+    "metadata.get_dataset_range",
+    "metadata.list_schemas",
+    "timeseries.*",
+    "batch.*"
+  ],
+  "negative_action_fields": [
+    "timeseries_request",
+    "batch_submission",
+    "download",
+    "purchase",
+    "alpaca",
+    "paper_trade",
+    "live_trade",
+    "order_submission",
+    "profitability_inference",
+    "capital_authority",
+    "trading_authority"
+  ],
+  "runner_status": "Q02_RUN11_AUTHENTICATED_METADATA_PREFLIGHT_EXECUTED_RECEIPTS_PENDING_SEMANTIC_VALIDATION_CAPITAL_AUTHORITY_FALSE"
+}

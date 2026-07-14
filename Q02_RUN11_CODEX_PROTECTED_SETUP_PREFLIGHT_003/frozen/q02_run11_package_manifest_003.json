@@ -1,0 +1,14 @@
+{
+  "id": "Q02_RUN11_PACKAGE_MANIFEST_003",
+  "package": "Q02_RUN11_CODEX_PROTECTED_SETUP_PREFLIGHT_003",
+  "sha256": {
+    "antecedent_roots": "a9d1e1f705fef8520ce46585b86fed4dc5cfd2918bc8cb7e7c8cd7ad19188a9f",
+    "frozen_scope": "787f3c413c3406030b15d42135a2fc39cde8c7ca9cee5fecc4c64f8d31089789",
+    "static_audit": "8598a7016908a32e515f16ee86585e6af99252c26f901d854bc7d7289a75aa4b",
+    "metadata_runner": "d880a0243895e075da4fe0f2db38a463f358a7fd468917fea92dbf09103d85fa",
+    "postsetup_validator": "6ba6898f67ef21f140176496d2ddc8825dc14ec682d6a9227feac34a2082da3a",
+    "ast_audit": "c02d0e3db86662e1afc0f0f386847b62d194a2c4b1c4dbcbbdb79f8481c1cf29"
+  },
+  "setup_command": "bash Q02_RUN11_CODEX_PROTECTED_SETUP_PREFLIGHT_003/Q02_RUN11_CODEX_PROTECTED_SETUP_PREFLIGHT_003.sh",
+  "postsetup_validator": "python Q02_RUN11_CODEX_PROTECTED_SETUP_PREFLIGHT_003/q02_run11_postsetup_validator_003.py"
+}

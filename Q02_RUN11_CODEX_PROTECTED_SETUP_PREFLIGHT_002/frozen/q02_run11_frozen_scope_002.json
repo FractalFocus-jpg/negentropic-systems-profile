@@ -1,0 +1,23 @@
+{
+  "id": "Q02_RUN11_FROZEN_SCOPE_002",
+  "api_request_filter_timestamp": "ts_recv",
+  "scientific_alignment_timestamp": "ts_event",
+  "children": [
+    {
+      "name": "ARCX",
+      "dataset": "ARCX.PILLAR",
+      "symbols": ["SPY"],
+      "schema": "mbo",
+      "acquisition_start": "2020-01-02T00:00:00Z",
+      "acquisition_end_exclusive": "2020-04-16T00:00:00Z"
+    },
+    {
+      "name": "GLBX",
+      "dataset": "GLBX.MDP3",
+      "symbols": ["ESH0", "ESM0"],
+      "schema": "mbo",
+      "acquisition_start": "2020-01-01T00:00:00Z",
+      "acquisition_end_exclusive": "2020-04-15T21:00:00Z"
+    }
+  ]
+}

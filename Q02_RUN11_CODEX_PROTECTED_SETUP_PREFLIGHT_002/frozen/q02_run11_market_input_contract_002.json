@@ -1,0 +1,21 @@
+{
+  "id": "Q02_RUN11_MARKET_INPUT_CONTRACT_002",
+  "allowed_schema": "mbo",
+  "allowed_queries": {
+    "ARCX": {
+      "dataset": "ARCX.PILLAR",
+      "symbols": ["SPY"],
+      "start": "2020-01-02T00:00:00Z",
+      "end": "2020-04-16T00:00:00Z"
+    },
+    "GLBX": {
+      "dataset": "GLBX.MDP3",
+      "symbols": ["ESH0", "ESM0"],
+      "start": "2020-01-01T00:00:00Z",
+      "end": "2020-04-15T21:00:00Z"
+    }
+  },
+  "request_filter_timestamp": "ts_recv",
+  "alignment_timestamp": "ts_event",
+  "data_access_boundary": "Metadata, symbology, dataset condition, cost, record count, and billable size only. No time-series data access."
+}

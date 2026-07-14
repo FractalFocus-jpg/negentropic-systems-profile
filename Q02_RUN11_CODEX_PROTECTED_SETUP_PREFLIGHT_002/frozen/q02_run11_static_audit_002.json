@@ -1,0 +1,45 @@
+{
+  "id": "Q02_RUN11_STATIC_AUDIT_002",
+  "permitted_authenticated_invocations_exact_order": [
+    "ARCX.symbology.resolve",
+    "ARCX.metadata.get_dataset_condition",
+    "ARCX.metadata.get_cost",
+    "ARCX.metadata.get_record_count",
+    "ARCX.metadata.get_billable_size",
+    "GLBX.symbology.resolve",
+    "GLBX.metadata.get_dataset_condition",
+    "GLBX.metadata.get_cost",
+    "GLBX.metadata.get_record_count",
+    "GLBX.metadata.get_billable_size"
+  ],
+  "prohibited_databento_methods": [
+    "metadata.list_datasets",
+    "metadata.get_dataset_range",
+    "metadata.list_schemas",
+    "timeseries.*",
+    "batch.*"
+  ],
+  "prohibited_terms": [
+    "MAX_COST_USD",
+    "Alpaca",
+    "paper trading",
+    "live trading",
+    "order submission",
+    "profitability inference"
+  ],
+  "output_policy": {
+    "exact_artifact_count": 10,
+    "allowed_artifacts": [
+      "arcx_symbology_receipt.json",
+      "glbx_symbology_receipt.json",
+      "arcx_dataset_condition_receipt.json",
+      "glbx_dataset_condition_receipt.json",
+      "arcx_cost_count_billable_size_receipt.json",
+      "glbx_cost_count_billable_size_receipt.json",
+      "canonical_preflight_manifest.json",
+      "execution_report.json",
+      "file_inventory.json",
+      "checksum_manifest.json"
+    ]
+  }
+}

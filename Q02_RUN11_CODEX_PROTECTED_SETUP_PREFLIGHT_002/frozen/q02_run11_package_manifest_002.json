@@ -1,0 +1,18 @@
+{
+  "id": "Q02_RUN11_PACKAGE_MANIFEST_002",
+  "package": "Q02_RUN11_CODEX_PROTECTED_SETUP_PREFLIGHT_002",
+  "sha256": {
+    "qualification": "8c960ca84a4ceca42dd2967f41d63fa5d21c88bc91b6dcb3f59e33873cb63dad",
+    "frozen_scope": "eff01435e0ab054d947a929b62ffcd18ee3ea8c79a8459b5a3171d1185fd731d",
+    "static_audit": "968ca02d8f564e48f654fa9013933af3bbfcf0d0ef7befcdb64a357b26a5ed76",
+    "market_input_contract": "a4a53679bb1028345ff49b671d04de9ef9b46b865a1c1ef3a9db289af3105963",
+    "metadata_runner": "b9b0385922e390fb7584a0a955ea771c9afcbfa893d286a134be3ee2dd140139",
+    "postsetup_validator": "f33963ab5035bff826c0f56ff73ff9ed420e3fc72e57111ae566488efb01f754"
+  },
+  "setup_command": "bash Q02_RUN11_CODEX_PROTECTED_SETUP_PREFLIGHT_002/Q02_RUN11_CODEX_PROTECTED_SETUP_PREFLIGHT_002.sh",
+  "notes": [
+    "Credential-free package manifest.",
+    "DATABENTO_API_KEY must be provided only through the protected setup environment.",
+    "Post-setup validator is credential-free and offline."
+  ]
+}

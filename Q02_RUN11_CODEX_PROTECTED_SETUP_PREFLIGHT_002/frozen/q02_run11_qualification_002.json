@@ -1,0 +1,28 @@
+{
+  "id": "Q02_RUN11_QUALIFICATION_002",
+  "purpose": "Frozen qualification gate for Q-02 Run 11 setup-phase Databento preflight.",
+  "allowed_phase": "codex_setup_phase_only",
+  "credential_policy": {
+    "credential_name": "DATABENTO_API_KEY",
+    "presence_only_test": true,
+    "never_print": true,
+    "never_hash": true,
+    "never_log": true,
+    "never_persist": true
+  },
+  "runtime_requirements": {
+    "python_implementation": "CPython",
+    "python_version": "3.12.13",
+    "databento_version": "0.81.0"
+  },
+  "capital_boundary": {
+    "download_authorized": false,
+    "purchase_authorized": false,
+    "batch_submission_authorized": false,
+    "alpaca_authorized": false,
+    "paper_trade_authorized": false,
+    "live_trade_authorized": false,
+    "order_submission_authorized": false,
+    "profitability_inference_authorized": false
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "artifact_type": "Q02_RUN11_CHECKSUM_MANIFEST_003",
+  "observation_timestamp": "2026-07-14T23:01:47.037367+00:00",
+  "sha256": {
+    "arcx_cost_count_billable_size_receipt.json": "33451bc7f19732e563b028fd71abe1904e6d028643ab3ae82c8aeadf7d29b474",
+    "arcx_dataset_condition_receipt.json": "0b4e3e8615c9bcd6145277453aa880eeef679ea78c6d966e34da277a2de3a2f5",
+    "arcx_symbology_receipt.json": "93c6128bfe65e539d95e68b05cfbae426cc792d562a9a6add0cc51341b259100",
+    "canonical_preflight_manifest.json": "ae8f7f936be7cad6082036a6f36ba95b75231da9913abc68bd09ad5d7fbb3016",
+    "execution_report.json": "217c3f307c3f9c90a1f87e1bf9952c427ab1111eb6049836e12ec1b4fe691e76",
+    "file_inventory.json": "038c8195222d8452218fa5a7187cf286e2409d7fa4a0b7b18cdc1438f9a53523",
+    "glbx_cost_count_billable_size_receipt.json": "ff402a8804eb45849d2e102776a6b95188080d48deeb6563b187443021cd4dab",
+    "glbx_dataset_condition_receipt.json": "59b2e81c2d2f2e854e30de287a2c6c540caec72d9a0f291f9364b26c1f0465b9",
+    "glbx_symbology_receipt.json": "d8613de99513b33120ef11a4ad07c71b5e5a28445a804cb9b07d4c4f73c8de3d"
+  }
+}

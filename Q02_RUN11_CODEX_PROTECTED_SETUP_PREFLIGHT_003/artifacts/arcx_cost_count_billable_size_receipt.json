@@ -1,0 +1,20 @@
+{
+  "api_key_included": false,
+  "billable_bytes": 24708860512,
+  "cost_usd": 27.614303505421,
+  "cost_usd_lossless": "27.614303505421",
+  "expiration_timestamp": "2026-07-14T23:06:47.037367+00:00",
+  "observation_timestamp": "2026-07-14T23:01:47.037367+00:00",
+  "receipt_type": "ARCX_COST_COUNT_BILLABLE_SIZE_RECEIPT",
+  "record_count": 441229652,
+  "request": {
+    "dataset": "ARCX.PILLAR",
+    "end_exclusive": "2020-04-16T00:00:00Z",
+    "schema": "mbo",
+    "start": "2020-01-02T00:00:00Z",
+    "stype_in": "raw_symbol",
+    "symbols": [
+      "SPY"
+    ]
+  }
+}

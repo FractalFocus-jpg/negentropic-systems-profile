@@ -1,0 +1,58 @@
+{
+  "antecedent_custody_roots": {
+    "id": "Q02_RUN11_ANTECEDENT_CUSTODY_ROOTS_003",
+    "immutable": true,
+    "roots": {
+      "ACQUISITION_CONTRACT_EQUIVALENCE_SHA256": "2a05a933924b69f07d4ec01589effed0868456ca3f74a2dcff94ac44e37ff92e",
+      "FIXTURE_CORPUS_SHA256": "17545b1b79625d03822b8a0012af202a2512747e596a204d487b6372eb342481",
+      "MARKET_INPUT_CONTRACT_SHA256": "970942048665900ba73ae005542d3ee3d2a598cc2d986d3e241d25cf6f71d8f2",
+      "PACKAGE_002_REJECTED_LAUNCHER_SHA256": "f6c5e5a6515540227323821e43991234cf439d602911b1aab5c16cad016bb848",
+      "PRIMARY_ENGINE_SHA256": "2c6ebca16c86bc3c00123528c6f03c7d11569d3dba6867f81e4149b7044d1ca7",
+      "QUALIFICATION_RECEIPT_SHA256": "d5c6911e1607540e024dc0863d9567132ae7466ada97cc07cd1d0f7ffeb09141",
+      "RUN11_CHECKSUM_MANIFEST_SHA256": "9f81a9c6e810e4a50daa3dc540b746cefa2bf481af4e5c762d11ee2b840c4a9b",
+      "SHADOW_ENGINE_SHA256": "71a66113bcea534a58cc2b102d4aec189ce654ab6efc02171bc0f9bc4cee706a"
+    }
+  },
+  "api_request_filter_timestamp": "ts_recv",
+  "artifact_type": "Q02_RUN11_CANONICAL_PREFLIGHT_MANIFEST_003",
+  "authenticated_invocations": [
+    "ARCX.symbology.resolve",
+    "ARCX.metadata.get_dataset_condition",
+    "ARCX.metadata.get_cost",
+    "ARCX.metadata.get_record_count",
+    "ARCX.metadata.get_billable_size",
+    "GLBX.symbology.resolve",
+    "GLBX.metadata.get_dataset_condition",
+    "GLBX.metadata.get_cost",
+    "GLBX.metadata.get_record_count",
+    "GLBX.metadata.get_billable_size"
+  ],
+  "capital_authority": false,
+  "expiration_timestamp": "2026-07-14T23:06:47.037367+00:00",
+  "final_pass_declared": false,
+  "frozen_hashes": {
+    "antecedent_roots": "a9d1e1f705fef8520ce46585b86fed4dc5cfd2918bc8cb7e7c8cd7ad19188a9f",
+    "ast_audit": "c02d0e3db86662e1afc0f0f386847b62d194a2c4b1c4dbcbbdb79f8481c1cf29",
+    "frozen_scope": "787f3c413c3406030b15d42135a2fc39cde8c7ca9cee5fecc4c64f8d31089789",
+    "metadata_runner": "d880a0243895e075da4fe0f2db38a463f358a7fd468917fea92dbf09103d85fa",
+    "package_manifest": "69ab112a057bc2e1c50d563a7728f7ee2a51dee18cafdd34ad214fddd1500e65",
+    "postsetup_validator": "6ba6898f67ef21f140176496d2ddc8825dc14ec682d6a9227feac34a2082da3a",
+    "static_audit": "8598a7016908a32e515f16ee86585e6af99252c26f901d854bc7d7289a75aa4b"
+  },
+  "negative_actions": {
+    "alpaca": false,
+    "batch_submission": false,
+    "capital_authority": false,
+    "download": false,
+    "live_trade": false,
+    "order_submission": false,
+    "paper_trade": false,
+    "profitability_inference": false,
+    "purchase": false,
+    "timeseries_request": false,
+    "trading_authority": false
+  },
+  "observation_timestamp": "2026-07-14T23:01:47.037367+00:00",
+  "scientific_alignment_timestamp": "ts_event",
+  "status": "Q02_RUN11_AUTHENTICATED_METADATA_PREFLIGHT_EXECUTED_RECEIPTS_PENDING_SEMANTIC_VALIDATION_CAPITAL_AUTHORITY_FALSE"
+}

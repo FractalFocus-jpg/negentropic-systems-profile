@@ -1,0 +1,21 @@
+{
+  "api_key_included": false,
+  "billable_bytes": 57134246232,
+  "cost_usd": 95.778743939102,
+  "cost_usd_lossless": "95.778743939102",
+  "expiration_timestamp": "2026-07-14T23:06:47.037367+00:00",
+  "observation_timestamp": "2026-07-14T23:01:47.037367+00:00",
+  "receipt_type": "GLBX_COST_COUNT_BILLABLE_SIZE_RECEIPT",
+  "record_count": 1020254397,
+  "request": {
+    "dataset": "GLBX.MDP3",
+    "end_exclusive": "2020-04-15T21:00:00Z",
+    "schema": "mbo",
+    "start": "2020-01-01T00:00:00Z",
+    "stype_in": "raw_symbol",
+    "symbols": [
+      "ESH0",
+      "ESM0"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "artifact_type": "Q02_RUN11_FILE_INVENTORY_003",
+  "files": [
+    {
+      "bytes": 1097,
+      "name": "arcx_symbology_receipt.json"
+    },
+    {
+      "bytes": 1254,
+      "name": "glbx_symbology_receipt.json"
+    },
+    {
+      "bytes": 9236,
+      "name": "arcx_dataset_condition_receipt.json"
+    },
+    {
+      "bytes": 11180,
+      "name": "glbx_dataset_condition_receipt.json"
+    },
+    {
+      "bytes": 568,
+      "name": "arcx_cost_count_billable_size_receipt.json"
+    },
+    {
+      "bytes": 582,
+      "name": "glbx_cost_count_billable_size_receipt.json"
+    },
+    {
+      "bytes": 2850,
+      "name": "canonical_preflight_manifest.json"
+    },
+    {
+      "bytes": 1155,
+      "name": "execution_report.json"
+    }
+  ],
+  "observation_timestamp": "2026-07-14T23:01:47.037367+00:00"
+}

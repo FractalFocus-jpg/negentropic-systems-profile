@@ -1,0 +1,34 @@
+{
+  "api_key_included": false,
+  "artifact_type": "Q02_RUN11_EXECUTION_REPORT_003",
+  "authenticated_invocation_count": 10,
+  "authenticated_invocations": [
+    "ARCX.symbology.resolve",
+    "ARCX.metadata.get_dataset_condition",
+    "ARCX.metadata.get_cost",
+    "ARCX.metadata.get_record_count",
+    "ARCX.metadata.get_billable_size",
+    "GLBX.symbology.resolve",
+    "GLBX.metadata.get_dataset_condition",
+    "GLBX.metadata.get_cost",
+    "GLBX.metadata.get_record_count",
+    "GLBX.metadata.get_billable_size"
+  ],
+  "credential_unset_after_use": true,
+  "expiration_timestamp": "2026-07-14T23:06:47.037367+00:00",
+  "negative_actions": {
+    "alpaca": false,
+    "batch_submission": false,
+    "capital_authority": false,
+    "download": false,
+    "live_trade": false,
+    "order_submission": false,
+    "paper_trade": false,
+    "profitability_inference": false,
+    "purchase": false,
+    "timeseries_request": false,
+    "trading_authority": false
+  },
+  "observation_timestamp": "2026-07-14T23:01:47.037367+00:00",
+  "status": "Q02_RUN11_AUTHENTICATED_METADATA_PREFLIGHT_EXECUTED_RECEIPTS_PENDING_SEMANTIC_VALIDATION_CAPITAL_AUTHORITY_FALSE"
+}

@@ -1,0 +1,56 @@
+{
+  "api_key_included": false,
+  "expiration_timestamp": "2026-07-14T23:06:47.037367+00:00",
+  "full_date_segmented_mappings_preserved": true,
+  "observation_timestamp": "2026-07-14T23:01:47.037367+00:00",
+  "receipt_type": "GLBX_SYMBOLOGY_RECEIPT",
+  "request": {
+    "dataset": "GLBX.MDP3",
+    "end_date_exclusive": "2020-04-16",
+    "schema": "mbo",
+    "start_date": "2020-01-01",
+    "stype_in": "raw_symbol",
+    "stype_out": "instrument_id",
+    "symbols": [
+      "ESH0",
+      "ESM0"
+    ]
+  },
+  "response": {
+    "end_date": "2020-04-16",
+    "message": "OK",
+    "not_found": [],
+    "partial": [],
+    "result": {
+      "ESH0": [
+        {
+          "d0": "2020-01-01",
+          "d1": "2020-04-05",
+          "s": "10571"
+        }
+      ],
+      "ESM0": [
+        {
+          "d0": "2020-01-01",
+          "d1": "2020-04-16",
+          "s": "21336"
+        }
+      ]
+    },
+    "start_date": "2020-01-01",
+    "status": 0,
+    "stype_in": "raw_symbol",
+    "stype_out": "instrument_id",
+    "symbols": [
+      "ESH0",
+      "ESM0"
+    ]
+  },
+  "semantic_validation": {
+    "final_pass_declared": false,
+    "not_found_empty": true,
+    "partial": [],
+    "partial_requires_contract_role_adjudication": false,
+    "status_zero": true
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "agent_phase_launcher_rerun": "BLOCKED_DATABENTO_API_KEY_ABSENT_AS_EXPECTED",
+  "batch_submission": false,
+  "capital_authority": false,
+  "checksum_manifest_sha256": "6e8bbf8a39b1f419af007934fca34cca9c500c1a22edefaaeb812f542747f64a",
+  "checksum_verification": [
+    {
+      "actual_sha256": "33451bc7f19732e563b028fd71abe1904e6d028643ab3ae82c8aeadf7d29b474",
+      "artifact": "arcx_cost_count_billable_size_receipt.json",
+      "expected_sha256": "33451bc7f19732e563b028fd71abe1904e6d028643ab3ae82c8aeadf7d29b474",
+      "verified": true
+    },
+    {
+      "actual_sha256": "0b4e3e8615c9bcd6145277453aa880eeef679ea78c6d966e34da277a2de3a2f5",
+      "artifact": "arcx_dataset_condition_receipt.json",
+      "expected_sha256": "0b4e3e8615c9bcd6145277453aa880eeef679ea78c6d966e34da277a2de3a2f5",
+      "verified": true
+    },
+    {
+      "actual_sha256": "93c6128bfe65e539d95e68b05cfbae426cc792d562a9a6add0cc51341b259100",
+      "artifact": "arcx_symbology_receipt.json",
+      "expected_sha256": "93c6128bfe65e539d95e68b05cfbae426cc792d562a9a6add0cc51341b259100",
+      "verified": true
+    },
+    {
+      "actual_sha256": "ae8f7f936be7cad6082036a6f36ba95b75231da9913abc68bd09ad5d7fbb3016",
+      "artifact": "canonical_preflight_manifest.json",
+      "expected_sha256": "ae8f7f936be7cad6082036a6f36ba95b75231da9913abc68bd09ad5d7fbb3016",
+      "verified": true
+    },
+    {
+      "actual_sha256": "217c3f307c3f9c90a1f87e1bf9952c427ab1111eb6049836e12ec1b4fe691e76",
+      "artifact": "execution_report.json",
+      "expected_sha256": "217c3f307c3f9c90a1f87e1bf9952c427ab1111eb6049836e12ec1b4fe691e76",
+      "verified": true
+    },
+    {
+      "actual_sha256": "038c8195222d8452218fa5a7187cf286e2409d7fa4a0b7b18cdc1438f9a53523",
+      "artifact": "file_inventory.json",
+      "expected_sha256": "038c8195222d8452218fa5a7187cf286e2409d7fa4a0b7b18cdc1438f9a53523",
+      "verified": true
+    },
+    {
+      "actual_sha256": "ff402a8804eb45849d2e102776a6b95188080d48deeb6563b187443021cd4dab",
+      "artifact": "glbx_cost_count_billable_size_receipt.json",
+      "expected_sha256": "ff402a8804eb45849d2e102776a6b95188080d48deeb6563b187443021cd4dab",
+      "verified": true
+    },
+    {
+      "actual_sha256": "59b2e81c2d2f2e854e30de287a2c6c540caec72d9a0f291f9364b26c1f0465b9",
+      "artifact": "glbx_dataset_condition_receipt.json",
+      "expected_sha256": "59b2e81c2d2f2e854e30de287a2c6c540caec72d9a0f291f9364b26c1f0465b9",
+      "verified": true
+    },
+    {
+      "actual_sha256": "d8613de99513b33120ef11a4ad07c71b5e5a28445a804cb9b07d4c4f73c8de3d",
+      "artifact": "glbx_symbology_receipt.json",
+      "expected_sha256": "d8613de99513b33120ef11a4ad07c71b5e5a28445a804cb9b07d4c4f73c8de3d",
+      "verified": true
+    }
+  ],
+  "checksum_verification_passed": true,
+  "databento_calls": false,
+  "degraded_date_policy": {
+    "DEGRADED_DATES_ALLOWED_FOR_PILOT": false,
+    "DEGRADED_DATES_ALLOWED_FOR_PRIMARY_INFERENCE": false,
+    "DEGRADED_DATES_REQUIRE_EXPLICIT_WAIVER": true
+  },
+  "degraded_dates": {
+    "ARCX.PILLAR": [
+      "2020-04-06"
+    ],
+    "GLBX.MDP3": [
+      "2020-02-27",
+      "2020-02-28"
+    ],
+    "missing": [],
+    "pending": []
+  },
+  "download": false,
+  "input_artifact_count": 10,
+  "input_artifacts": [
+    "arcx_cost_count_billable_size_receipt.json",
+    "arcx_dataset_condition_receipt.json",
+    "arcx_symbology_receipt.json",
+    "canonical_preflight_manifest.json",
+    "execution_report.json",
+    "file_inventory.json",
+    "glbx_cost_count_billable_size_receipt.json",
+    "glbx_dataset_condition_receipt.json",
+    "glbx_symbology_receipt.json",
+    "checksum_manifest.json"
+  ],
+  "network_access": false,
+  "numerical_authority": [
+    "Q02_RUN11_CODEX_PROTECTED_SETUP_PREFLIGHT_003/artifacts/arcx_cost_count_billable_size_receipt.json",
+    "Q02_RUN11_CODEX_PROTECTED_SETUP_PREFLIGHT_003/artifacts/glbx_cost_count_billable_size_receipt.json"
+  ],
+  "observed_estimates": {
+    "ARCX_BILLABLE_BYTES": 24708860512,
+    "ARCX_COST_USD": "27.614303505421",
+    "ARCX_RECORD_COUNT": 441229652,
+    "GLBX_BILLABLE_BYTES": 57134246232,
+    "GLBX_COST_USD": "95.778743939102",
+    "GLBX_RECORD_COUNT": 1020254397,
+    "THREE_COPY_CUSTODY_GIB": 228.66699866205454,
+    "TOTAL_BILLABLE_BYTES": 81843106744,
+    "TOTAL_BILLABLE_GIB": 76.22233288735151,
+    "TOTAL_ESTIMATED_COST_USD": "123.393047444523",
+    "TOTAL_RECORD_COUNT": 1461484049
+  },
+  "package_id": "Q02_RUN11_AUTHENTICATED_PREFLIGHT_SEMANTIC_ADJUDICATION_001",
+  "pilot_controls": {
+    "PILOT_BATCH_AUTHORITY": false,
+    "PILOT_CAPITAL_AUTHORITY": false,
+    "PILOT_DOWNLOAD_AUTHORITY": false,
+    "PILOT_ESTIMATE_REFRESH_REQUIRED": true,
+    "PILOT_PARAMETER_TUNING_ALLOWED": false,
+    "PILOT_PROFITABILITY_INFERENCE_ALLOWED": false,
+    "PILOT_PURPOSE": "PIPELINE_QUALIFICATION_ONLY"
+  },
+  "protected_setup_execution": "SUCCEEDED",
+  "purchase": false,
+  "setup_launcher_rerun": false,
+  "source_package": "Q02_RUN11_CODEX_PROTECTED_SETUP_PREFLIGHT_003/artifacts",
+  "storage_gate": {
+    "PREVIOUS_50_GB_FULL_SCOPE_GATE": "FAIL",
+    "WORKING_SPACE_REQUIREMENT": "UNVALIDATED_PENDING_REAL_MBO_PILOT"
+  },
+  "symbology_adjudication": {
+    "ARCX": {
+      "dataset": "ARCX.PILLAR",
+      "not_found": [],
+      "partial": [],
+      "status": 0
+    },
+    "GLBX": {
+      "ESH0_ESM0_CONTRACT_ROLE": "PENDING_OPERATOR_LOCK",
+      "ESH0_FULL_INTERVAL_COVERAGE": false,
+      "PARTIAL_REQUIRES_CONTRACT_ROLE_ADJUDICATION": true,
+      "dataset": "GLBX.MDP3",
+      "mappings_preserved_exactly": {
+        "ESH0": [
+          {
+            "d0": "2020-01-01",
+            "d1": "2020-04-05",
+            "s": "10571"
+          }
+        ],
+        "ESM0": [
+          {
+            "d0": "2020-01-01",
+            "d1": "2020-04-16",
+            "s": "21336"
+          }
+        ]
+      },
+      "not_found": [],
+      "roll_switch_rule_inferred": false,
+      "status": 0
+    }
+  },
+  "terminal_verdict": "Q02_RUN11_AUTHENTICATED_METADATA_PREFLIGHT_STRUCTURAL_PASS_ESH0_CONTRACT_ROLE_PENDING_DEGRADED_DATES_IDENTIFIED_CLEAN_PILOT_DRAFTED_PILOT_ESTIMATE_REFRESH_REQUIRED_CAPITAL_AUTHORITY_FALSE",
+  "trading_authority": false
+}

@@ -1,0 +1,42 @@
+{
+  "PILOT_BATCH_AUTHORITY": false,
+  "PILOT_CAPITAL_AUTHORITY": false,
+  "PILOT_DOWNLOAD_AUTHORITY": false,
+  "PILOT_ESTIMATE_REFRESH_REQUIRED": true,
+  "PILOT_PARAMETER_TUNING_ALLOWED": false,
+  "PILOT_PROFITABILITY_INFERENCE_ALLOWED": false,
+  "PILOT_PURPOSE": "PIPELINE_QUALIFICATION_ONLY",
+  "allowed_dates": [
+    "2020-01-02"
+  ],
+  "candidate": "smallest deterministic clean pilot avoiding degraded dates",
+  "datasets": [
+    {
+      "dataset": "ARCX.PILLAR",
+      "schema": "mbo",
+      "symbols": [
+        "SPY"
+      ]
+    },
+    {
+      "dataset": "GLBX.MDP3",
+      "schema": "mbo",
+      "symbols": [
+        "ESH0",
+        "ESM0"
+      ]
+    }
+  ],
+  "package_id": "Q02_RUN11_AUTHENTICATED_PREFLIGHT_SEMANTIC_ADJUDICATION_001",
+  "pilot_purpose": "PIPELINE_QUALIFICATION_ONLY",
+  "tests": [
+    "DBN decoding",
+    "snapshot initialization",
+    "ARCX adapter",
+    "GLBX adapter",
+    "source-to-derived lineage",
+    "Run 11 bucket conservation",
+    "primary/shadow agreement",
+    "restart determinism"
+  ]
+}

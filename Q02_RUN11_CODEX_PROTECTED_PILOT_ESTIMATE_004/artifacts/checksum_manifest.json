@@ -1,0 +1,24 @@
+{
+  "sha256": [
+    {
+      "path": "arcx_estimate_receipt.json",
+      "sha256": "ecbe272c643b438854b68f5a353278363d3908964a511439bba4ba1e9068ba00"
+    },
+    {
+      "path": "glbx_estimate_receipt.json",
+      "sha256": "45378097770747f524cc01f37c5ddff7db2c7312fa51b9a4234bee09bf2c2d20"
+    },
+    {
+      "path": "canonical_manifest.json",
+      "sha256": "040f6f9af6fca5ecc5459cfd6f4589e2ed87617ef0344e28996df21795c1793c"
+    },
+    {
+      "path": "execution_report.json",
+      "sha256": "b8772f899e059181457372401b685e864d416f95de1eacf4e1ac347a270d6e38"
+    },
+    {
+      "path": "file_inventory.json",
+      "sha256": "609951d827ae4ead29af0672a804f452c94ba360b20a57587b0f6ae705f734ea"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "authenticated_invocations": [
+    "GLBX.metadata.get_cost",
+    "GLBX.metadata.get_record_count",
+    "GLBX.metadata.get_billable_size"
+  ],
+  "estimate_is_authority": false,
+  "estimate_max_age_seconds": 300,
+  "expires_at_utc": "2026-07-15T18:22:39.305107+00:00",
+  "max_cost_usd_constructed": false,
+  "observation_timestamp_utc": "2026-07-15T18:17:39.305107+00:00",
+  "pilot_batch_authority": false,
+  "pilot_capital_authority": false,
+  "pilot_download_authority": false,
+  "pilot_purchase_authority": false,
+  "request": {
+    "dataset": "GLBX.MDP3",
+    "end": "2020-01-03T00:00:00Z",
+    "schema": "mbo",
+    "start": "2020-01-02T00:00:00Z",
+    "stype_in": "raw_symbol",
+    "symbols": [
+      "ESH0",
+      "ESM0"
+    ]
+  },
+  "responses": {
+    "metadata.get_billable_size": 309645728,
+    "metadata.get_cost": "0.519084101915",
+    "metadata.get_record_count": 5529388
+  },
+  "trading_authority": false,
+  "venue": "GLBX"
+}

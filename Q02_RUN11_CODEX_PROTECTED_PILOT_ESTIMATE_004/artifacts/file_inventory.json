@@ -1,0 +1,20 @@
+{
+  "files": [
+    {
+      "bytes": 928,
+      "path": "arcx_estimate_receipt.json"
+    },
+    {
+      "bytes": 941,
+      "path": "glbx_estimate_receipt.json"
+    },
+    {
+      "bytes": 894,
+      "path": "canonical_manifest.json"
+    },
+    {
+      "bytes": 193,
+      "path": "execution_report.json"
+    }
+  ]
+}

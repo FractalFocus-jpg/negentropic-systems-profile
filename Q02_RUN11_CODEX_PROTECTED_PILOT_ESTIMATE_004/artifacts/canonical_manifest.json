@@ -1,0 +1,31 @@
+{
+  "allowed_authenticated_invocations": [
+    "ARCX.metadata.get_cost",
+    "ARCX.metadata.get_record_count",
+    "ARCX.metadata.get_billable_size",
+    "GLBX.metadata.get_cost",
+    "GLBX.metadata.get_record_count",
+    "GLBX.metadata.get_billable_size"
+  ],
+  "negative_authority": {
+    "batch_submission": false,
+    "capital_authority": false,
+    "download": false,
+    "purchase": false,
+    "trading_authority": false
+  },
+  "observation_order": [
+    "ARCX.metadata.get_cost",
+    "ARCX.metadata.get_record_count",
+    "ARCX.metadata.get_billable_size",
+    "GLBX.metadata.get_cost",
+    "GLBX.metadata.get_record_count",
+    "GLBX.metadata.get_billable_size"
+  ],
+  "package_id": "Q02_RUN11_CODEX_PROTECTED_PILOT_ESTIMATE_004",
+  "pilot_id": "Q02_RUN11_MBO_PIPELINE_PILOT_001",
+  "receipts": {
+    "ARCX": "arcx_estimate_receipt.json",
+    "GLBX": "glbx_estimate_receipt.json"
+  }
+}

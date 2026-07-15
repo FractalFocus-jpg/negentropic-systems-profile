@@ -1,0 +1,12 @@
+{
+  "package_id": "Q02_RUN11_AUTHENTICATED_PREFLIGHT_SEMANTIC_ADJUDICATION_001",
+  "sha256": {
+    "degraded_date_policy_draft.json": "164bdde895a61e46b1f43b7e420caaed1e0282f37e8fa7cfc8a3e80df17245fb",
+    "file_inventory.json": "4090ec06f70228d0a57466da26c6c416b553711326d7c5d0404b22047a03f66e",
+    "full_scope_storage_gate_report.json": "4d12c0d592ba3ae30d82b36a0310b5bef5b5fc37be708158fb8826586b4496d2",
+    "pilot_candidate_manifest.json": "57010dcc1c07a32807b38f173f4235881dda2d80281eb31cac57ed1c29fdbd7c",
+    "primary_scientific_mask_draft.json": "6dc0025d1d561161238eb8a88c5e6e92c9b919d547808145ec5e4ece55bb3ce3",
+    "semantic_adjudication_receipt.json": "0a171cd9ba0ac1a53c5312ad4335db4552f9413380ed2130977ba08d89ba51ac",
+    "semantic_adjudication_report.md": "e7407be0f2bdf0b4c258a058d3ed2efe7f63ef906a2309e3890b28a2d07d711d"
+  }
+}

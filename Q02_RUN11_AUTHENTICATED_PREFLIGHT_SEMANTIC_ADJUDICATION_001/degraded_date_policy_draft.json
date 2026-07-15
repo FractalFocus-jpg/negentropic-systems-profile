@@ -1,0 +1,18 @@
+{
+  "DEGRADED_DATES_ALLOWED_FOR_PILOT": false,
+  "DEGRADED_DATES_ALLOWED_FOR_PRIMARY_INFERENCE": false,
+  "DEGRADED_DATES_REQUIRE_EXPLICIT_WAIVER": true,
+  "degraded_dates": {
+    "ARCX.PILLAR": [
+      "2020-04-06"
+    ],
+    "GLBX.MDP3": [
+      "2020-02-27",
+      "2020-02-28"
+    ],
+    "missing": [],
+    "pending": []
+  },
+  "explicit_waiver_required_for_any_use_of_degraded_dates": true,
+  "package_id": "Q02_RUN11_AUTHENTICATED_PREFLIGHT_SEMANTIC_ADJUDICATION_001"
+}

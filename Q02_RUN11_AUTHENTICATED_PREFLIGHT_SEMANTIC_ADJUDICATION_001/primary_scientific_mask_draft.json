@@ -1,0 +1,25 @@
+{
+  "package_id": "Q02_RUN11_AUTHENTICATED_PREFLIGHT_SEMANTIC_ADJUDICATION_001",
+  "primary_scientific_mask": {
+    "exclude_contract_role_unlocked_interval": {
+      "from": "2020-04-05",
+      "reason": "ESH0_ESM0_CONTRACT_ROLE_PENDING_OPERATOR_LOCK",
+      "symbol": "ESH0",
+      "through_request_end_exclusive": "2020-04-16"
+    },
+    "exclude_degraded_dates": {
+      "ARCX.PILLAR": [
+        "2020-04-06"
+      ],
+      "GLBX.MDP3": [
+        "2020-02-27",
+        "2020-02-28"
+      ],
+      "missing": [],
+      "pending": []
+    },
+    "exclude_missing": [],
+    "exclude_pending": [],
+    "roll_switch_rule_inferred": false
+  }
+}

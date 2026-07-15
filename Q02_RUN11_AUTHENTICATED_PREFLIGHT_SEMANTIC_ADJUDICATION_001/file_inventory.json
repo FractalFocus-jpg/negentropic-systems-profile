@@ -1,0 +1,29 @@
+{
+  "files": [
+    {
+      "bytes": 2395,
+      "name": "semantic_adjudication_report.md"
+    },
+    {
+      "bytes": 5792,
+      "name": "semantic_adjudication_receipt.json"
+    },
+    {
+      "bytes": 476,
+      "name": "degraded_date_policy_draft.json"
+    },
+    {
+      "bytes": 642,
+      "name": "primary_scientific_mask_draft.json"
+    },
+    {
+      "bytes": 1032,
+      "name": "pilot_candidate_manifest.json"
+    },
+    {
+      "bytes": 538,
+      "name": "full_scope_storage_gate_report.json"
+    }
+  ],
+  "package_id": "Q02_RUN11_AUTHENTICATED_PREFLIGHT_SEMANTIC_ADJUDICATION_001"
+}

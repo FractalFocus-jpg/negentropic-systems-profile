@@ -1,0 +1,18 @@
+{
+  "allowed_authenticated_invocations": [
+    "ARCX.metadata.get_cost",
+    "ARCX.metadata.get_record_count",
+    "ARCX.metadata.get_billable_size",
+    "GLBX.metadata.get_cost",
+    "GLBX.metadata.get_record_count",
+    "GLBX.metadata.get_billable_size"
+  ],
+  "forbidden": [
+    "timeseries.get_range",
+    "batch.submit_job",
+    "download",
+    "purchase",
+    "trading"
+  ],
+  "network_access_outside_runner": false
+}

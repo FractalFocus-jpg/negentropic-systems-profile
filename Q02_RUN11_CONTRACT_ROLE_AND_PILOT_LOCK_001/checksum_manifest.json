@@ -1,0 +1,29 @@
+{
+  "artifact_id": "Q02_RUN11_CONTRACT_ROLE_AND_PILOT_LOCK_001",
+  "sha256": [
+    {
+      "path": "contract_role_lock.json",
+      "sha256": "e04f071608670afe738166647c37f816546d655b9c69ab330a6a8d32705f0197"
+    },
+    {
+      "path": "file_inventory.json",
+      "sha256": "2bb5a5b0dbb9e75d3f5cdbf0172b628a2d8ee91320738b70c7eab4b10f3e2a3d"
+    },
+    {
+      "path": "frozen_pilot_scope.json",
+      "sha256": "5f73601290a71f1cc72d468f72f4147ed67fe6297913991e65ffea0967520c9e"
+    },
+    {
+      "path": "pilot_lock_report.md",
+      "sha256": "f708ee919320f16a2aef8b55d49a6b54845db0d34371848c6238ac7466cac446"
+    },
+    {
+      "path": "pilot_negative_authority_receipt.json",
+      "sha256": "7c0b25c33fcec6403dc54a97e7a08425190304851a5cb6a749f9c850a8e93f84"
+    },
+    {
+      "path": "pilot_test_contract.json",
+      "sha256": "f33ef824036d1589cfab2b2bc1e02aedf6b7b3ccc34922190bdb07cffea20cbb"
+    }
+  ]
+}

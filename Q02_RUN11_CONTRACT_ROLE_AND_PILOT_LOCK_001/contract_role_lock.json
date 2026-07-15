@@ -1,0 +1,22 @@
+{
+  "artifact_id": "Q02_RUN11_CONTRACT_ROLE_AND_PILOT_LOCK_001",
+  "continuous_contract_stitching": false,
+  "cross_contract_order_book_merge": false,
+  "cross_contract_volume_aggregation": false,
+  "non_substitution": "ESH0 and ESM0 may both exercise the GLBX adapter, but neither may be treated as a substitute for the other.",
+  "per_contract_requirements": [
+    "own instrument_id",
+    "own order-state partition",
+    "own source-to-derived lineage",
+    "own replay state",
+    "own validation results"
+  ],
+  "roles": {
+    "ESH0": "PRIMARY_NEAR_CONTRACT_INDEPENDENT_ORDER_BOOK",
+    "ESM0": "SECONDARY_DEFERRED_CONTRACT_INDEPENDENT_ORDER_BOOK"
+  },
+  "roll_switch_rule": "NONE",
+  "scientific_roll_policy_defined": false,
+  "scope": "pipeline_qualification_pilot_only",
+  "shared_order_id_namespace": false
+}

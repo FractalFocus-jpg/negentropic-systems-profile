@@ -1,11 +1,11 @@
 {
   "files": [
     {
-      "bytes": 2395,
+      "bytes": 2752,
       "name": "semantic_adjudication_report.md"
     },
     {
-      "bytes": 5792,
+      "bytes": 6133,
       "name": "semantic_adjudication_receipt.json"
     },
     {
@@ -21,7 +21,7 @@
       "name": "pilot_candidate_manifest.json"
     },
     {
-      "bytes": 538,
+      "bytes": 875,
       "name": "full_scope_storage_gate_report.json"
     }
   ],

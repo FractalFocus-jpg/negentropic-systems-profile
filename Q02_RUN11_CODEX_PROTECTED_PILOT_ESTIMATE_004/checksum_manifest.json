@@ -2,10 +2,6 @@
   "package_id": "Q02_RUN11_CODEX_PROTECTED_PILOT_ESTIMATE_004",
   "sha256": [
     {
-      "path": "Q02_RUN11_CODEX_PROTECTED_PILOT_ESTIMATE_004.sh",
-      "sha256": "b8c2de7dbeb44e7c0a6cd4c2ff7d5470ee42e2b513325e19f663dabc6a0b8e47"
-    },
-    {
       "path": "Q02_RUN11_POSTSETUP_AGENT_TASK_004.md",
       "sha256": "18460e6d7badebed101f11b2029d72b8d17932070357e259fbee93c4cf62f8d5"
     },
@@ -39,11 +35,7 @@
     },
     {
       "path": "file_inventory.json",
-      "sha256": "f39b1ab4eb72df0fa3528d03eaf97053994ba8d3f889e6feb7b83afa913ea901"
-    },
-    {
-      "path": "checksum_manifest.json",
-      "sha256": "a0f948e386a5727e9a00d219a98c4f6386a25ce0e7b92f34bbae1d1a6c651426"
+      "sha256": "2988a42f8f9aec44ab39f8619cbb19076bea0efbd65b6d59ed285edec1555e6f"
     }
   ]
 }

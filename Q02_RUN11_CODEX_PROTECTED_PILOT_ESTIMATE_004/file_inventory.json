@@ -1,7 +1,7 @@
 {
   "files": [
     {
-      "bytes": 1197,
+      "bytes": 2218,
       "path": "Q02_RUN11_CODEX_PROTECTED_PILOT_ESTIMATE_004.sh"
     },
     {
@@ -9,7 +9,7 @@
       "path": "Q02_RUN11_POSTSETUP_AGENT_TASK_004.md"
     },
     {
-      "bytes": 1403,
+      "bytes": 5397,
       "path": "credential_free_validator_004.py"
     },
     {
@@ -25,16 +25,24 @@
       "path": "frozen/package_manifest.json"
     },
     {
-      "bytes": 424,
+      "bytes": 650,
       "path": "frozen/static_audit.json"
     },
     {
-      "bytes": 3573,
+      "bytes": 5603,
       "path": "pilot_metadata_runner_004.py"
     },
     {
-      "bytes": 1000,
+      "bytes": 2683,
       "path": "tools/ast_call_surface_audit_004.py"
+    },
+    {
+      "bytes": 970,
+      "path": "file_inventory.json"
+    },
+    {
+      "bytes": 1669,
+      "path": "checksum_manifest.json"
     }
   ],
   "package_id": "Q02_RUN11_CODEX_PROTECTED_PILOT_ESTIMATE_004"

@@ -8,11 +8,22 @@
     "GLBX.metadata.get_billable_size"
   ],
   "forbidden": [
-    "timeseries.get_range",
-    "batch.submit_job",
+    "client.timeseries",
+    "client.batch",
+    "client.symbology",
+    "submit_job",
     "download",
-    "purchase",
-    "trading"
+    "get_range",
+    "get_range_async"
   ],
-  "network_access_outside_runner": false
+  "metadata_permitted_keywords": [
+    "dataset",
+    "start",
+    "end",
+    "symbols",
+    "schema",
+    "stype_in"
+  ],
+  "network_access_outside_runner": false,
+  "only_audited_metadata_runner_may_receive_secret": true
 }

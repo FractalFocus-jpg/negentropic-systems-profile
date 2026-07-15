@@ -3,7 +3,7 @@
   "sha256": [
     {
       "path": "Q02_RUN11_CODEX_PROTECTED_PILOT_ESTIMATE_004.sh",
-      "sha256": "04a8a644fc008901a60232830a10de744dbab7881f285b23c238ef5cefdf5366"
+      "sha256": "b8c2de7dbeb44e7c0a6cd4c2ff7d5470ee42e2b513325e19f663dabc6a0b8e47"
     },
     {
       "path": "Q02_RUN11_POSTSETUP_AGENT_TASK_004.md",
@@ -11,7 +11,7 @@
     },
     {
       "path": "credential_free_validator_004.py",
-      "sha256": "f0f0a5dc2b068b6e25dbf67bef9aab41724252abf6564bce0a66d5cc2fa54d4d"
+      "sha256": "9ce74e9b0abe2dc163e619ec3a52d312189b762fe47868c80478672dc3cfc1f8"
     },
     {
       "path": "frozen/antecedent_roots.json",
@@ -27,19 +27,23 @@
     },
     {
       "path": "frozen/static_audit.json",
-      "sha256": "59c3cb9b72576f6c859db8e1ec08bbf531e55d4fc6b524cd02b09bad2d776e57"
+      "sha256": "432b3dfe3d669917f4f59257a2555edc16471ae26e51ae1df6a05f123077e074"
     },
     {
       "path": "pilot_metadata_runner_004.py",
-      "sha256": "8cc76714958a2cd335c377a6fd4ebc4f3611e585df56edad0cef2aa18e9fd463"
+      "sha256": "17398ae6d708eaa29d84d2a8c4b1cdb48e3610ebf312e1b271a4bb97bf3442ba"
     },
     {
       "path": "tools/ast_call_surface_audit_004.py",
-      "sha256": "491d61752b96b108ea1d74396c196d19fc46bc2d43d02176db6e3088552f3b6e"
+      "sha256": "e9843ed9a0c379d6db228bc33976be408934e786c4642549dd91357b44ab32d7"
     },
     {
       "path": "file_inventory.json",
-      "sha256": "15fbe9e0628386c906d0c5e805d2c32786245c04ee1adbb3f4a93bbaeb79986e"
+      "sha256": "f39b1ab4eb72df0fa3528d03eaf97053994ba8d3f889e6feb7b83afa913ea901"
+    },
+    {
+      "path": "checksum_manifest.json",
+      "sha256": "a0f948e386a5727e9a00d219a98c4f6386a25ce0e7b92f34bbae1d1a6c651426"
     }
   ]
 }

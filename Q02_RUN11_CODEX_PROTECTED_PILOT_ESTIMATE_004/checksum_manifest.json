@@ -1,0 +1,41 @@
+{
+  "package_id": "Q02_RUN11_CODEX_PROTECTED_PILOT_ESTIMATE_004",
+  "sha256": [
+    {
+      "path": "Q02_RUN11_POSTSETUP_AGENT_TASK_004.md",
+      "sha256": "18460e6d7badebed101f11b2029d72b8d17932070357e259fbee93c4cf62f8d5"
+    },
+    {
+      "path": "credential_free_validator_004.py",
+      "sha256": "9ce74e9b0abe2dc163e619ec3a52d312189b762fe47868c80478672dc3cfc1f8"
+    },
+    {
+      "path": "frozen/antecedent_roots.json",
+      "sha256": "698a714ec5c9d951c6c9bd53dd63a62c8e99dfb2bf9dd2b7c3335a79ff016a1a"
+    },
+    {
+      "path": "frozen/frozen_pilot_scope.json",
+      "sha256": "5f73601290a71f1cc72d468f72f4147ed67fe6297913991e65ffea0967520c9e"
+    },
+    {
+      "path": "frozen/package_manifest.json",
+      "sha256": "bbb4d92b8cdec823d2f74209784bd2bc6d54d5752ba792354c99da3fc98789a4"
+    },
+    {
+      "path": "frozen/static_audit.json",
+      "sha256": "432b3dfe3d669917f4f59257a2555edc16471ae26e51ae1df6a05f123077e074"
+    },
+    {
+      "path": "pilot_metadata_runner_004.py",
+      "sha256": "17398ae6d708eaa29d84d2a8c4b1cdb48e3610ebf312e1b271a4bb97bf3442ba"
+    },
+    {
+      "path": "tools/ast_call_surface_audit_004.py",
+      "sha256": "e9843ed9a0c379d6db228bc33976be408934e786c4642549dd91357b44ab32d7"
+    },
+    {
+      "path": "file_inventory.json",
+      "sha256": "2988a42f8f9aec44ab39f8619cbb19076bea0efbd65b6d59ed285edec1555e6f"
+    }
+  ]
+}

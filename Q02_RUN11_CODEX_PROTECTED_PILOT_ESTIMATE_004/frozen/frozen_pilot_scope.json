@@ -1,0 +1,39 @@
+{
+  "api_request_filter_timestamp": "ts_recv",
+  "children": {
+    "ARCX": {
+      "dataset": "ARCX.PILLAR",
+      "end_exclusive": "2020-01-03T00:00:00Z",
+      "schema": "mbo",
+      "split_symbols": false,
+      "start_inclusive": "2020-01-02T00:00:00Z",
+      "symbols": [
+        "SPY"
+      ]
+    },
+    "GLBX": {
+      "dataset": "GLBX.MDP3",
+      "end_exclusive": "2020-01-03T00:00:00Z",
+      "schema": "mbo",
+      "split_symbols": true,
+      "start_inclusive": "2020-01-02T00:00:00Z",
+      "symbols": [
+        "ESH0",
+        "ESM0"
+      ]
+    }
+  },
+  "compression": "zstd",
+  "encoding": "dbn",
+  "native_session_sample": false,
+  "pilot_date": "2020-01-02",
+  "pilot_date_mode": "COMPLETE_UTC_DAY_PIPELINE_QUALIFICATION",
+  "pilot_id": "Q02_RUN11_MBO_PIPELINE_PILOT_001",
+  "scientific_alignment_timestamp": "ts_event",
+  "scientific_inference_window": false,
+  "split_duration": "day",
+  "split_size_bytes": null,
+  "stype_in": "raw_symbol",
+  "stype_out": "instrument_id",
+  "technical_bridge_qualification": true
+}

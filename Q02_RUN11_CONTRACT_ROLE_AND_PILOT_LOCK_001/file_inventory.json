@@ -1,0 +1,25 @@
+{
+  "artifact_id": "Q02_RUN11_CONTRACT_ROLE_AND_PILOT_LOCK_001",
+  "files": [
+    {
+      "bytes": 819,
+      "path": "contract_role_lock.json"
+    },
+    {
+      "bytes": 1037,
+      "path": "frozen_pilot_scope.json"
+    },
+    {
+      "bytes": 376,
+      "path": "pilot_lock_report.md"
+    },
+    {
+      "bytes": 439,
+      "path": "pilot_negative_authority_receipt.json"
+    },
+    {
+      "bytes": 780,
+      "path": "pilot_test_contract.json"
+    }
+  ]
+}

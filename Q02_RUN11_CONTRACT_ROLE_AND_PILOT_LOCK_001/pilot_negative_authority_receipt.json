@@ -1,0 +1,16 @@
+{
+  "batch_submission": false,
+  "capital_authority": false,
+  "databento_calls": false,
+  "download": false,
+  "estimate_is_authority": false,
+  "estimate_max_age_seconds": 300,
+  "max_cost_usd_constructed": false,
+  "network_access": false,
+  "pilot_batch_authority": false,
+  "pilot_capital_authority": false,
+  "pilot_download_authority": false,
+  "pilot_purchase_authority": false,
+  "purchase": false,
+  "trading_authority": false
+}

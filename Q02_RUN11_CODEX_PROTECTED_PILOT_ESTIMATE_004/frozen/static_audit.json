@@ -1,0 +1,29 @@
+{
+  "allowed_authenticated_invocations": [
+    "ARCX.metadata.get_cost",
+    "ARCX.metadata.get_record_count",
+    "ARCX.metadata.get_billable_size",
+    "GLBX.metadata.get_cost",
+    "GLBX.metadata.get_record_count",
+    "GLBX.metadata.get_billable_size"
+  ],
+  "forbidden": [
+    "client.timeseries",
+    "client.batch",
+    "client.symbology",
+    "submit_job",
+    "download",
+    "get_range",
+    "get_range_async"
+  ],
+  "metadata_permitted_keywords": [
+    "dataset",
+    "start",
+    "end",
+    "symbols",
+    "schema",
+    "stype_in"
+  ],
+  "network_access_outside_runner": false,
+  "only_audited_metadata_runner_may_receive_secret": true
+}

@@ -1,0 +1,24 @@
+{
+  "credential_free_package": true,
+  "estimate_is_authority": false,
+  "estimate_max_age_seconds": 300,
+  "max_cost_usd_constructed": false,
+  "outputs": [
+    "arcx_estimate_receipt.json",
+    "glbx_estimate_receipt.json",
+    "canonical_manifest.json",
+    "execution_report.json",
+    "file_inventory.json",
+    "checksum_manifest.json"
+  ],
+  "package_id": "Q02_RUN11_CODEX_PROTECTED_PILOT_ESTIMATE_004",
+  "pilot_batch_authority": false,
+  "pilot_capital_authority": false,
+  "pilot_download_authority": false,
+  "pilot_purchase_authority": false,
+  "pins": {
+    "databento": "0.81.0"
+  },
+  "requires_cpython": "3.12.13",
+  "trading_authority": false
+}

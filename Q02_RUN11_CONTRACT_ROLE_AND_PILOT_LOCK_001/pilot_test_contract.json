@@ -1,0 +1,24 @@
+{
+  "pilot_market_edge_inference_allowed": false,
+  "pilot_parameter_tuning_allowed": false,
+  "pilot_profitability_inference_allowed": false,
+  "pilot_purpose": "PIPELINE_QUALIFICATION_ONLY",
+  "pilot_threshold_selection_allowed": false,
+  "tests": [
+    "raw delivery hash verification",
+    "DBN decoding",
+    "snapshot initialization",
+    "F_LAST snapshot completion",
+    "ARCX adapter",
+    "GLBX ESH0 adapter partition",
+    "GLBX ESM0 adapter partition",
+    "source-to-derived lineage",
+    "unknown-action detection",
+    "book-state invariant enforcement",
+    "fixed-point classified-volume conservation",
+    "Run 11 bucket conservation",
+    "primary/shadow exact equality",
+    "interruption and restart determinism",
+    "measured working-space expansion"
+  ]
+}

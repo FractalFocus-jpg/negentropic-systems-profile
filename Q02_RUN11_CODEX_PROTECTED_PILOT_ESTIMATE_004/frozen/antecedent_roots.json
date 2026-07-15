@@ -1,0 +1,8 @@
+{
+  "checksum_manifest.json": "885b6aea781bbb1264e416093d230d20288c973bbc1a99289a3dc39bc8920766",
+  "full_scope_storage_gate_report.json": "fad2cac5337fcd635e197319a4ac01408899f5258b089a79fe9764f90aa5b9b6",
+  "pilot_candidate_manifest.json": "57010dcc1c07a32807b38f173f4235881dda2d80281eb31cac57ed1c29fdbd7c",
+  "semantic_adjudication_package": "Q02_RUN11_AUTHENTICATED_PREFLIGHT_SEMANTIC_ADJUDICATION_001",
+  "semantic_adjudication_receipt.json": "f36aba424b7d87b6e5ebe66b9fe6408d9e24dcb1fa3a868190edc00659fe6128",
+  "semantic_adjudication_report.md": "3328c66496d7927c4e11eda223130e1544946e4fe033bd4c0a9ecbc7069ecc07"
+}

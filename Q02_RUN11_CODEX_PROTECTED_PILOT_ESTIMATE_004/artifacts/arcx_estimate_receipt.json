@@ -1,0 +1,33 @@
+{
+  "authenticated_invocations": [
+    "ARCX.metadata.get_cost",
+    "ARCX.metadata.get_record_count",
+    "ARCX.metadata.get_billable_size"
+  ],
+  "estimate_is_authority": false,
+  "estimate_max_age_seconds": 300,
+  "expires_at_utc": "2026-07-15T18:22:21.314433+00:00",
+  "max_cost_usd_constructed": false,
+  "observation_timestamp_utc": "2026-07-15T18:17:21.314433+00:00",
+  "pilot_batch_authority": false,
+  "pilot_capital_authority": false,
+  "pilot_download_authority": false,
+  "pilot_purchase_authority": false,
+  "request": {
+    "dataset": "ARCX.PILLAR",
+    "end": "2020-01-03T00:00:00Z",
+    "schema": "mbo",
+    "start": "2020-01-02T00:00:00Z",
+    "stype_in": "raw_symbol",
+    "symbols": [
+      "SPY"
+    ]
+  },
+  "responses": {
+    "metadata.get_billable_size": 119660464,
+    "metadata.get_cost": "0.133730989695",
+    "metadata.get_record_count": 2136794
+  },
+  "trading_authority": false,
+  "venue": "ARCX"
+}

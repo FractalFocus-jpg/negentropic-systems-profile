@@ -1,0 +1,37 @@
+name: APX Receipt Guard
+
+on:
+  pull_request:
+    branches: [main, dev]
+    paths:
+      - 'tools/apx_receipt_guard.py'
+      - 'apx/**'
+      - 'formal/**'
+      - '.github/workflows/apx-receipt-guard.yml'
+      - 'docs/APX_AUTOMATION_CONSTITUTION.md'
+  push:
+    branches: [main, dev]
+    paths:
+      - 'tools/apx_receipt_guard.py'
+      - 'apx/**'
+      - 'formal/**'
+      - '.github/workflows/apx-receipt-guard.yml'
+      - 'docs/APX_AUTOMATION_CONSTITUTION.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  receipt-guard-self-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run fail-closed self-test
+        run: python tools/apx_receipt_guard.py --self-test

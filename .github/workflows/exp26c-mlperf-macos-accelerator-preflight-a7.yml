@@ -1,0 +1,120 @@
+name: EXP26C MLPerf macOS Accelerator Binding A7
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/exp26c-mlperf-macos-accelerator-preflight-a7.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  macos-accelerator-binding:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Provider-hosted macOS arm64 hardware + MLPerf binding
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence/exp26c/a7_work
+          cd evidence/exp26c/a7_work
+          STABLE_ID='LT-UOS-EIDOLEN-EXP26C-MLPERF-MACOS-ACCELERATOR-BINDING-A7-20260818'
+          RELEASE_TAG='v2.0'
+          ASSET='mlperf-client-2.0.0-c8d2dc0-macos.zip'
+          URL="https://github.com/mlcommons/mlperf_client/releases/download/${RELEASE_TAG}/${ASSET}"
+          curl -fL "$URL" -o "$ASSET"
+          ASSET_SHA=$(shasum -a 256 "$ASSET" | awk '{print $1}')
+          unzip -q "$ASSET" -d extracted
+          EXE=$(find extracted -type f -perm +111 | grep -E 'mlperf.*macos|mlperf' | head -n 1 || true)
+          if [ -z "$EXE" ]; then
+            EXE=$(find extracted -type f | grep -E 'mlperf.*macos|mlperf' | head -n 1 || true)
+          fi
+          if [ -z "$EXE" ]; then
+            ERROR='NO_MACOS_EXECUTABLE_FOUND'
+            TERM='ERROR_EXP26C_A7_MACOS_ACCELERATOR_BINDING__NO_EXECUTABLE_FOUND__FIRST_ERROR_PRESERVED__NO_RETRY__EXTERNAL_0_OF_12'
+            python3 - <<'PY'
+import json, os
+out={
+ 'stable_id':os.environ.get('STABLE_ID','LT-UOS-EIDOLEN-EXP26C-MLPERF-MACOS-ACCELERATOR-BINDING-A7-20260818'),
+ 'record_type':'PROVIDER_HOSTED_ACCELERATOR_RESOURCE_BINDING_PREFLIGHT_ONLY',
+ 'scientific_execution':False,'exp26c_scientific_id_assigned':False,
+ 'independent_custody':False,'unaffiliated_execution':False,'external_role_effect':'NONE','strict_external_role_coverage':'0/12',
+ 'error':'NO_MACOS_EXECUTABLE_FOUND',
+ 'terminal':'ERROR_EXP26C_A7_MACOS_ACCELERATOR_BINDING__NO_EXECUTABLE_FOUND__FIRST_ERROR_PRESERVED__NO_RETRY__EXTERNAL_0_OF_12'}
+open('../mlperf_macos_accelerator_binding_a7.json','w').write(json.dumps(out,indent=2)+"\n")
+PY
+            cd ../../..
+            git add evidence/exp26c/mlperf_macos_accelerator_binding_a7.json
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Record EXP26C MLPerf macOS accelerator binding A7' || true
+            git push || true
+            exit 0
+          fi
+          chmod +x "$EXE"
+          EXE_SHA=$(shasum -a 256 "$EXE" | awk '{print $1}')
+          VERSION_OUTPUT=$($EXE --version 2>&1 || true)
+          VERSION_RC=$?
+          MODELS_OUTPUT=$($EXE --list-models 2>&1 || true)
+          MODELS_RC=$?
+          HELP_OUTPUT=$($EXE --help 2>&1 | head -n 200 || true)
+          uname -a > uname.txt
+          system_profiler SPHardwareDataType SPDisplaysDataType > system_profiler.txt 2>&1 || true
+          python3 - <<'PY'
+import json, os, subprocess, re, hashlib, urllib.request
+from pathlib import Path
+w=Path('.')
+sp=(w/'system_profiler.txt').read_text(errors='replace')
+un=(w/'uname.txt').read_text(errors='replace').strip()
+# Freeze three official model/runtime configs from exact public paths.
+configs={
+ 'llama31_metal':'https://raw.githubusercontent.com/mlcommons/mlperf_client/main/data/configs/vendors_default/llm/Llama3.1/macOS_llamacpp-Metal_GPU.json',
+ 'phi4mini_metal':'https://raw.githubusercontent.com/mlcommons/mlperf_client/main/data/configs/vendors_default/llm/phi4mini/macOS_llamacpp-Metal_GPU.json',
+ 'qwen3_metal':'https://raw.githubusercontent.com/mlcommons/mlperf_client/main/data/configs/vendors_default/llm/extended/qwen3/macOS_llamacpp-Metal_GPU.json'
+}
+crec={}
+for k,u in configs.items():
+    try:
+        b=urllib.request.urlopen(u,timeout=30).read()
+        (w/(k+'.json')).write_bytes(b)
+        crec[k]={'url':u,'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest(),'fetched':True}
+    except Exception as e:
+        crec[k]={'url':u,'fetched':False,'error':repr(e)}
+asset=next(w.glob('mlperf-client-*-macos.zip'))
+exe_candidates=[p for p in (w/'extracted').rglob('*') if p.is_file() and 'mlperf' in p.name.lower()]
+exe=exe_candidates[0] if exe_candidates else None
+asset_sha=hashlib.sha256(asset.read_bytes()).hexdigest()
+exe_sha=hashlib.sha256(exe.read_bytes()).hexdigest() if exe else None
+version=subprocess.run([str(exe),'--version'],capture_output=True,text=True) if exe else None
+models=subprocess.run([str(exe),'--list-models'],capture_output=True,text=True) if exe else None
+apple_gpu=bool(re.search(r'Chipset Model:\s*Apple|Metal Support|Apple M[1-9]',sp,re.I))
+arm64=('arm64' in un.lower()) or ('Apple' in sp and 'Chip' in sp)
+all_cfg=all(v.get('fetched') for v in crec.values())
+pass_gate=bool(exe and version and version.returncode==0 and models and models.returncode==0 and apple_gpu and arm64 and all_cfg)
+terminal=('PASS_EXP26C_A7_MACOS_ACCELERATOR_RESOURCE_BINDING__APPLE_SILICON_ARM64_AND_GPU_VISIBLE__OFFICIAL_MLPERF_MACOS_BINARY_HASH_BOUND__THREE_OFFICIAL_METAL_MODEL_CONFIGS_HASH_BOUND__NO_MODEL_SCORING__OWNER_CONTROLLED_GITHUB_PROVIDER_ONLY__EXTERNAL_0_OF_12' if pass_gate else 'FAIL_EXP26C_A7_MACOS_ACCELERATOR_RESOURCE_BINDING__BOUND_PREFLIGHT_GATE_INCOMPLETE__NO_SCIENTIFIC_SCORING__EXTERNAL_0_OF_12')
+out={
+ 'stable_id':'LT-UOS-EIDOLEN-EXP26C-MLPERF-MACOS-ACCELERATOR-BINDING-A7-20260818',
+ 'record_type':'PROVIDER_HOSTED_ACCELERATOR_RESOURCE_BINDING_PREFLIGHT_ONLY',
+ 'timestamp_utc':__import__('datetime').datetime.now(__import__('datetime').timezone.utc).isoformat(),
+ 'runner_os':'macOS','runner_arch':'arm64','github_sha':os.environ.get('GITHUB_SHA'),'github_ref':os.environ.get('GITHUB_REF'),
+ 'scientific_execution':False,'exp26c_scientific_id_assigned':False,
+ 'independent_custody':False,'unaffiliated_execution':False,'independent_scoring_adjudication':False,
+ 'external_role_effect':'NONE','strict_external_role_coverage':'0/12',
+ 'uname':un,'apple_gpu_or_metal_visible':apple_gpu,'arm64_verified':arm64,
+ 'system_profiler_excerpt':sp[:12000],
+ 'release_tag':'v2.0','asset_name':asset.name,'asset_size':asset.stat().st_size,'asset_sha256':asset_sha,
+ 'selected_executable':str(exe) if exe else None,'executable_sha256':exe_sha,
+ 'version_exit_code':version.returncode if version else None,'version_output':(version.stdout+version.stderr).splitlines() if version else [],
+ 'list_models_exit_code':models.returncode if models else None,'list_models_output':(models.stdout+models.stderr).splitlines() if models else [],
+ 'official_metal_configs':crec,
+ 'three_stack_scientific_execution':False,
+ 'terminal':terminal
+}
+Path('../mlperf_macos_accelerator_binding_a7.json').write_text(json.dumps(out,indent=2)+"\n")
+PY
+          cd ../../..
+          git add evidence/exp26c/mlperf_macos_accelerator_binding_a7.json
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Record EXP26C MLPerf macOS accelerator binding A7' || true
+          git push || true

@@ -1,0 +1,84 @@
+{
+  "stable_id": "LT-UOS-EIDOLEN-EXP26C-MLPERF-WINDOWS-PROVIDER-PREFLIGHT-A4-20260818T174800-0400",
+  "record_type": "PROVIDER_HOSTED_SUPPORTED_PLATFORM_PREFLIGHT_ONLY",
+  "timestamp_utc": "2026-08-18T21:50:59.3301607Z",
+  "runner_os": "Windows",
+  "runner_arch": "X64",
+  "github_sha": "335f6a9249215092ae4951897b9d8c6e213c9027",
+  "github_ref": "refs/heads/main",
+  "scientific_execution": false,
+  "exp26c_scientific_id_assigned": false,
+  "external_role_effect": "NONE",
+  "strict_external_role_coverage": "0/12",
+  "independent_custody": false,
+  "unaffiliated_adjudication": false,
+  "os": {
+    "Caption": "Microsoft Windows Server 2025 Datacenter",
+    "Version": "10.0.26100",
+    "BuildNumber": "26100",
+    "OSArchitecture": "64-bit"
+  },
+  "cpu": {
+    "Name": "AMD EPYC 7763 64-Core Processor                ",
+    "Manufacturer": "AuthenticAMD",
+    "NumberOfCores": 1,
+    "NumberOfLogicalProcessors": 2
+  },
+  "video": {
+    "Name": "Microsoft Hyper-V Video",
+    "AdapterRAM": null,
+    "DriverVersion": "10.0.26100.1150"
+  },
+  "release_tag": "v2.0",
+  "release_name": "MLPerf Client 2.0.0",
+  "release_published_at": "2026-08-18T14:55:28Z",
+  "release_assets": [
+    {
+      "name": "accuracy.zip",
+      "size": 122163,
+      "browser_download_url": "https://github.com/mlcommons/mlperf_client/releases/download/v2.0/accuracy.zip"
+    },
+    {
+      "name": "mlperf-client-2.0.0-c8d2dc0-macos-gui.tar.gz",
+      "size": 45929266,
+      "browser_download_url": "https://github.com/mlcommons/mlperf_client/releases/download/v2.0/mlperf-client-2.0.0-c8d2dc0-macos-gui.tar.gz"
+    },
+    {
+      "name": "mlperf-client-2.0.0-c8d2dc0-macos.zip",
+      "size": 12751530,
+      "browser_download_url": "https://github.com/mlcommons/mlperf_client/releases/download/v2.0/mlperf-client-2.0.0-c8d2dc0-macos.zip"
+    },
+    {
+      "name": "mlperf-client-2.0.0-c8d2dc0-ubuntu-24.04.zip",
+      "size": 7971488,
+      "browser_download_url": "https://github.com/mlcommons/mlperf_client/releases/download/v2.0/mlperf-client-2.0.0-c8d2dc0-ubuntu-24.04.zip"
+    },
+    {
+      "name": "mlperf-client-2.0.0-c8d2dc0-windows-arm64-gui.zip",
+      "size": 44187636,
+      "browser_download_url": "https://github.com/mlcommons/mlperf_client/releases/download/v2.0/mlperf-client-2.0.0-c8d2dc0-windows-arm64-gui.zip"
+    },
+    {
+      "name": "mlperf-client-2.0.0-c8d2dc0-windows-arm64.zip",
+      "size": 4088192,
+      "browser_download_url": "https://github.com/mlcommons/mlperf_client/releases/download/v2.0/mlperf-client-2.0.0-c8d2dc0-windows-arm64.zip"
+    },
+    {
+      "name": "mlperf-client-2.0.0-c8d2dc0-windows-x64-gui.zip",
+      "size": 259308524,
+      "browser_download_url": "https://github.com/mlcommons/mlperf_client/releases/download/v2.0/mlperf-client-2.0.0-c8d2dc0-windows-x64-gui.zip"
+    },
+    {
+      "name": "mlperf-client-2.0.0-c8d2dc0-windows-x64.zip",
+      "size": 200205787,
+      "browser_download_url": "https://github.com/mlcommons/mlperf_client/releases/download/v2.0/mlperf-client-2.0.0-c8d2dc0-windows-x64.zip"
+    },
+    {
+      "name": "power.zip",
+      "size": 415751,
+      "browser_download_url": "https://github.com/mlcommons/mlperf_client/releases/download/v2.0/power.zip"
+    }
+  ],
+  "error": "NO_WINDOWS_EXECUTABLE_ASSET",
+  "terminal": "ERROR_EXP26C_A4_WINDOWS_PROVIDER_PREFLIGHT__FIRST_ERROR_PRESERVED__NO_RETRY__EXTERNAL_0_OF_12"
+}

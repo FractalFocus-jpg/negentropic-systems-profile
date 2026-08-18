@@ -1,0 +1,71 @@
+{
+  "stable_id": "LT-UOS-EIDOLEN-EXP26C-MLPERF-WINDOWS-PROVIDER-PREFLIGHT-A4-R1-20260818T175300-0400",
+  "parent_stable_id": "LT-UOS-EIDOLEN-EXP26C-MLPERF-WINDOWS-PROVIDER-PREFLIGHT-A4-20260818T174800-0400",
+  "parent_terminal": "ERROR_EXP26C_A4_WINDOWS_PROVIDER_PREFLIGHT__FIRST_ERROR_PRESERVED__NO_RETRY__EXTERNAL_0_OF_12",
+  "repair_delta": "Download official non-GUI Windows x64 ZIP, hash ZIP, extract, locate CLI executable; scientific scope unchanged.",
+  "record_type": "PROVIDER_HOSTED_SUPPORTED_PLATFORM_PREFLIGHT_ONLY",
+  "timestamp_utc": "2026-08-18T21:52:51.4119192Z",
+  "runner_os": "Windows",
+  "runner_arch": "X64",
+  "github_sha": "6027719d8133271925abcc0fa318c42646879382",
+  "scientific_execution": false,
+  "exp26c_scientific_id_assigned": false,
+  "independent_custody": false,
+  "unaffiliated_execution": false,
+  "independent_scoring_adjudication": false,
+  "external_role_effect": "NONE",
+  "strict_external_role_coverage": "0/12",
+  "os": {
+    "Caption": "Microsoft Windows Server 2025 Datacenter",
+    "Version": "10.0.26100",
+    "BuildNumber": "26100",
+    "OSArchitecture": "64-bit"
+  },
+  "cpu": {
+    "Name": "AMD EPYC 7763 64-Core Processor                ",
+    "Manufacturer": "AuthenticAMD",
+    "NumberOfCores": 1,
+    "NumberOfLogicalProcessors": 2
+  },
+  "video": {
+    "Name": "Microsoft Hyper-V Video",
+    "AdapterRAM": null,
+    "DriverVersion": "10.0.26100.1150"
+  },
+  "release_tag": "v2.0",
+  "release_name": "MLPerf Client 2.0.0",
+  "release_published_at": "2026-08-18T14:55:28Z",
+  "asset_name": "mlperf-client-2.0.0-c8d2dc0-windows-x64.zip",
+  "asset_size": 200205787,
+  "asset_sha256": "0b923bcbf2a06f443d2879006b51d5ee580e9afb221d8e6fefcdeb891d93aa5d",
+  "exe_candidates": [
+    {
+      "FullName": "D:\\a\\tapestry-codex-starter\\tapestry-codex-starter\\evidence\\exp26c\\mlperf_windows_x64_extracted\\mlperf-windows.exe",
+      "Name": "mlperf-windows.exe",
+      "Length": 516380464
+    }
+  ],
+  "selected_executable": "D:\\a\\tapestry-codex-starter\\tapestry-codex-starter\\evidence\\exp26c\\mlperf_windows_x64_extracted\\mlperf-windows.exe",
+  "executable_sha256": "5a1dfbdc45876438b9ec289ffae1ea3b126eefc88562cd072adf1484896c7908",
+  "version_exit_code": 0,
+  "list_models_exit_code": 0,
+  "version_output": [
+    "Application Version: 2.0.0.c8d2dc0 MLCommons Standard Build"
+  ],
+  "list_models_output": [
+    "Supported models:",
+    "  Llama 3.1 8B Instruct  (llama_3_1_8b_instruct, Base)",
+    "  Phi 4 Mini Instruct  (phi_4_mini_instruct, Base)",
+    "  Phi 4 Reasoning 14B  (phi_4_reasoning_14b, Extended)",
+    "  Qwen 3 8B  (qwen_3_8b, Base)",
+    "  Flux 2 Klein 4B  (flux_2_klein_4b, Experimental)"
+  ],
+  "model_names_detected": [
+    "  Llama 3.1 8B Instruct  (llama_3_1_8b_instruct, Base)",
+    "  Phi 4 Mini Instruct  (phi_4_mini_instruct, Base)",
+    "  Phi 4 Reasoning 14B  (phi_4_reasoning_14b, Extended)",
+    "  Qwen 3 8B  (qwen_3_8b, Base)",
+    "  Flux 2 Klein 4B  (flux_2_klein_4b, Experimental)"
+  ],
+  "terminal": "PASS_EXP26C_A4_R1_WINDOWS_PROVIDER_PREFLIGHT__OFFICIAL_WINDOWS_X64_ZIP_HASH_BOUND__CLI_EXECUTABLE_HASH_BOUND__VERSION_AND_MODEL_SURFACE_EXECUTED__NO_SCIENTIFIC_SCORING__OWNER_CONTROLLED_GITHUB_PROVIDER_ONLY__FAILED_PARENT_PRESERVED__EXTERNAL_0_OF_12"
+}

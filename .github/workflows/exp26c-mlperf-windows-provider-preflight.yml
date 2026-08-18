@@ -1,0 +1,104 @@
+name: EXP26C MLPerf Windows Provider Preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/exp26c-mlperf-windows-provider-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Run provider-hosted Windows preflight
+        id: preflight
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Force evidence/exp26c | Out-Null
+          $stableId = 'LT-UOS-EIDOLEN-EXP26C-MLPERF-WINDOWS-PROVIDER-PREFLIGHT-A4-20260818T174800-0400'
+          $result = [ordered]@{
+            stable_id = $stableId
+            record_type = 'PROVIDER_HOSTED_SUPPORTED_PLATFORM_PREFLIGHT_ONLY'
+            timestamp_utc = (Get-Date).ToUniversalTime().ToString('o')
+            runner_os = $env:RUNNER_OS
+            runner_arch = $env:RUNNER_ARCH
+            github_sha = $env:GITHUB_SHA
+            github_ref = $env:GITHUB_REF
+            scientific_execution = $false
+            exp26c_scientific_id_assigned = $false
+            external_role_effect = 'NONE'
+            strict_external_role_coverage = '0/12'
+            independent_custody = $false
+            unaffiliated_adjudication = $false
+          }
+          try {
+            $os = Get-CimInstance Win32_OperatingSystem | Select-Object Caption,Version,BuildNumber,OSArchitecture
+            $cpu = Get-CimInstance Win32_Processor | Select-Object -First 1 Name,Manufacturer,NumberOfCores,NumberOfLogicalProcessors
+            $gpu = Get-CimInstance Win32_VideoController | Select-Object Name,AdapterRAM,DriverVersion
+            $result.os = $os
+            $result.cpu = $cpu
+            $result.video = $gpu
+
+            $headers = @{ 'User-Agent' = 'EIDOLEN-EXP26C-Preflight' }
+            $release = Invoke-RestMethod -Headers $headers -Uri 'https://api.github.com/repos/mlcommons/mlperf_client/releases/latest'
+            $result.release_tag = $release.tag_name
+            $result.release_name = $release.name
+            $result.release_published_at = $release.published_at
+            $result.release_assets = @($release.assets | Select-Object name,size,browser_download_url)
+
+            $asset = $release.assets | Where-Object { $_.name -match '(?i)(windows|win).*\.exe$' } | Select-Object -First 1
+            if (-not $asset) { $asset = $release.assets | Where-Object { $_.name -match '(?i)\.exe$' } | Select-Object -First 1 }
+            if (-not $asset) { throw 'NO_WINDOWS_EXECUTABLE_ASSET' }
+
+            $exe = 'evidence/exp26c/mlperf-windows.exe'
+            Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $exe
+            $hash = (Get-FileHash $exe -Algorithm SHA256).Hash.ToLower()
+            $result.asset_name = $asset.name
+            $result.asset_size = $asset.size
+            $result.binary_sha256 = $hash
+
+            $versionLines = @(& $exe --version 2>&1 | ForEach-Object { $_.ToString() })
+            $versionExit = $LASTEXITCODE
+            $modelLines = @(& $exe --list-models 2>&1 | ForEach-Object { $_.ToString() })
+            $modelsExit = $LASTEXITCODE
+            $result.version_exit_code = $versionExit
+            $result.list_models_exit_code = $modelsExit
+            $result.version_output = $versionLines
+            $result.list_models_output = $modelLines
+
+            if ($versionExit -eq 0 -and $modelsExit -eq 0) {
+              $result.terminal = 'PASS_EXP26C_A4_WINDOWS_PROVIDER_PREFLIGHT__SUPPORTED_WINDOWS_RUNNER__MLPERF_BINARY_HASH_BOUND__VERSION_AND_MODEL_SURFACE_EXECUTED__NO_SCIENTIFIC_SCORING__OWNER_CONTROLLED_GITHUB_PROVIDER_ONLY__EXTERNAL_0_OF_12'
+            } else {
+              $result.terminal = 'FAIL_EXP26C_A4_WINDOWS_PROVIDER_PREFLIGHT__MLPERF_BINARY_EXECUTED_BUT_VERSION_OR_MODEL_SURFACE_EXIT_NONZERO__NO_RETRY__EXTERNAL_0_OF_12'
+            }
+          } catch {
+            $result.error = $_.Exception.Message
+            $result.terminal = 'ERROR_EXP26C_A4_WINDOWS_PROVIDER_PREFLIGHT__FIRST_ERROR_PRESERVED__NO_RETRY__EXTERNAL_0_OF_12'
+          }
+          $jsonPath = 'evidence/exp26c/mlperf_windows_provider_preflight_a4.json'
+          $result | ConvertTo-Json -Depth 10 | Set-Content -Encoding utf8 $jsonPath
+          $result.terminal | Set-Content -Encoding utf8 'evidence/exp26c/mlperf_windows_provider_preflight_a4_terminal.txt'
+          if (Test-Path 'evidence/exp26c/mlperf-windows.exe') { Remove-Item 'evidence/exp26c/mlperf-windows.exe' -Force }
+
+      - name: Commit immutable provider receipt
+        if: always()
+        shell: pwsh
+        run: |
+          git config user.name 'eidolen-provider-preflight'
+          git config user.email 'actions@users.noreply.github.com'
+          git add evidence/exp26c/mlperf_windows_provider_preflight_a4.json evidence/exp26c/mlperf_windows_provider_preflight_a4_terminal.txt
+          if (git diff --cached --quiet) { exit 0 }
+          git commit -m 'Record EXP26C MLPerf Windows provider preflight A4'
+          git push origin HEAD:main

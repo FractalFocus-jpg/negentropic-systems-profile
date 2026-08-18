@@ -1,0 +1,113 @@
+name: EXP26C MLPerf Windows Provider Preflight A4-R1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/exp26c-mlperf-windows-provider-preflight-a4-r1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Execute additive packaging-repair preflight
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Force evidence/exp26c | Out-Null
+          $stableId = 'LT-UOS-EIDOLEN-EXP26C-MLPERF-WINDOWS-PROVIDER-PREFLIGHT-A4-R1-20260818T175300-0400'
+          $result = [ordered]@{
+            stable_id = $stableId
+            parent_stable_id = 'LT-UOS-EIDOLEN-EXP26C-MLPERF-WINDOWS-PROVIDER-PREFLIGHT-A4-20260818T174800-0400'
+            parent_terminal = 'ERROR_EXP26C_A4_WINDOWS_PROVIDER_PREFLIGHT__FIRST_ERROR_PRESERVED__NO_RETRY__EXTERNAL_0_OF_12'
+            repair_delta = 'Download official non-GUI Windows x64 ZIP, hash ZIP, extract, locate CLI executable; scientific scope unchanged.'
+            record_type = 'PROVIDER_HOSTED_SUPPORTED_PLATFORM_PREFLIGHT_ONLY'
+            timestamp_utc = (Get-Date).ToUniversalTime().ToString('o')
+            runner_os = $env:RUNNER_OS
+            runner_arch = $env:RUNNER_ARCH
+            github_sha = $env:GITHUB_SHA
+            scientific_execution = $false
+            exp26c_scientific_id_assigned = $false
+            independent_custody = $false
+            unaffiliated_execution = $false
+            independent_scoring_adjudication = $false
+            external_role_effect = 'NONE'
+            strict_external_role_coverage = '0/12'
+          }
+          try {
+            $result.os = Get-CimInstance Win32_OperatingSystem | Select-Object Caption,Version,BuildNumber,OSArchitecture
+            $result.cpu = Get-CimInstance Win32_Processor | Select-Object -First 1 Name,Manufacturer,NumberOfCores,NumberOfLogicalProcessors
+            $result.video = Get-CimInstance Win32_VideoController | Select-Object Name,AdapterRAM,DriverVersion
+
+            $headers = @{ 'User-Agent' = 'EIDOLEN-EXP26C-Preflight' }
+            $release = Invoke-RestMethod -Headers $headers -Uri 'https://api.github.com/repos/mlcommons/mlperf_client/releases/latest'
+            $result.release_tag = $release.tag_name
+            $result.release_name = $release.name
+            $result.release_published_at = $release.published_at
+
+            $asset = $release.assets | Where-Object { $_.name -match '(?i)windows-x64\.zip$' -and $_.name -notmatch '(?i)gui' } | Select-Object -First 1
+            if (-not $asset) { throw 'NO_NON_GUI_WINDOWS_X64_ZIP_ASSET' }
+            $zipPath = 'evidence/exp26c/mlperf-windows-x64.zip'
+            Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath
+            $zipHash = (Get-FileHash $zipPath -Algorithm SHA256).Hash.ToLower()
+            $result.asset_name = $asset.name
+            $result.asset_size = $asset.size
+            $result.asset_sha256 = $zipHash
+
+            $extractDir = 'evidence/exp26c/mlperf_windows_x64_extracted'
+            Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+            $exeCandidates = @(Get-ChildItem -Path $extractDir -Recurse -File -Filter '*.exe' | Select-Object FullName,Name,Length)
+            $result.exe_candidates = $exeCandidates
+            $exeObj = Get-ChildItem -Path $extractDir -Recurse -File -Filter '*.exe' |
+              Where-Object { $_.Name -match '(?i)mlperf' } |
+              Sort-Object Length -Descending |
+              Select-Object -First 1
+            if (-not $exeObj) { throw 'NO_MLPERF_EXECUTABLE_FOUND_AFTER_EXTRACTION' }
+            $result.selected_executable = $exeObj.FullName
+            $result.executable_sha256 = (Get-FileHash $exeObj.FullName -Algorithm SHA256).Hash.ToLower()
+
+            $versionLines = @(& $exeObj.FullName --version 2>&1 | ForEach-Object { $_.ToString() })
+            $versionExit = $LASTEXITCODE
+            $modelLines = @(& $exeObj.FullName --list-models 2>&1 | ForEach-Object { $_.ToString() })
+            $modelsExit = $LASTEXITCODE
+            $result.version_exit_code = $versionExit
+            $result.list_models_exit_code = $modelsExit
+            $result.version_output = $versionLines
+            $result.list_models_output = $modelLines
+            $result.model_names_detected = @($modelLines | Where-Object { $_ -match '(?i)(llama|qwen|phi|flux)' })
+
+            if ($versionExit -eq 0 -and $modelsExit -eq 0) {
+              $result.terminal = 'PASS_EXP26C_A4_R1_WINDOWS_PROVIDER_PREFLIGHT__OFFICIAL_WINDOWS_X64_ZIP_HASH_BOUND__CLI_EXECUTABLE_HASH_BOUND__VERSION_AND_MODEL_SURFACE_EXECUTED__NO_SCIENTIFIC_SCORING__OWNER_CONTROLLED_GITHUB_PROVIDER_ONLY__FAILED_PARENT_PRESERVED__EXTERNAL_0_OF_12'
+            } else {
+              $result.terminal = 'FAIL_EXP26C_A4_R1_WINDOWS_PROVIDER_PREFLIGHT__CLI_EXECUTED_BUT_VERSION_OR_MODEL_SURFACE_EXIT_NONZERO__NO_RETRY__FAILED_PARENT_PRESERVED__EXTERNAL_0_OF_12'
+            }
+          } catch {
+            $result.error = $_.Exception.Message
+            $result.terminal = 'ERROR_EXP26C_A4_R1_WINDOWS_PROVIDER_PREFLIGHT__FIRST_ERROR_PRESERVED__NO_RETRY__FAILED_PARENT_PRESERVED__EXTERNAL_0_OF_12'
+          }
+          $result | ConvertTo-Json -Depth 12 | Set-Content -Encoding utf8 'evidence/exp26c/mlperf_windows_provider_preflight_a4_r1.json'
+          $result.terminal | Set-Content -Encoding utf8 'evidence/exp26c/mlperf_windows_provider_preflight_a4_r1_terminal.txt'
+          Remove-Item 'evidence/exp26c/mlperf-windows-x64.zip' -Force -ErrorAction SilentlyContinue
+          Remove-Item 'evidence/exp26c/mlperf_windows_x64_extracted' -Recurse -Force -ErrorAction SilentlyContinue
+
+      - name: Commit immutable provider receipt
+        if: always()
+        shell: pwsh
+        run: |
+          git config user.name 'eidolen-provider-preflight'
+          git config user.email 'actions@users.noreply.github.com'
+          git add evidence/exp26c/mlperf_windows_provider_preflight_a4_r1.json evidence/exp26c/mlperf_windows_provider_preflight_a4_r1_terminal.txt
+          if (git diff --cached --quiet) { exit 0 }
+          git commit -m 'Record EXP26C MLPerf Windows provider preflight A4-R1'
+          git push origin HEAD:main

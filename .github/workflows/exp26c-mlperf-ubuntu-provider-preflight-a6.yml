@@ -1,0 +1,189 @@
+name: EXP26C MLPerf Ubuntu Provider Preflight A6
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/exp26c-mlperf-ubuntu-provider-preflight-a6.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Execute frozen Ubuntu standard-build preflight
+        shell: bash
+        continue-on-error: true
+        run: |
+          set +e
+          mkdir -p evidence/exp26c /tmp/exp26c_a6/extracted
+          STABLE_ID='LT-UOS-EIDOLEN-EXP26C-MLPERF-UBUNTU-PROVIDER-PREFLIGHT-A6-20260818'
+          RELEASE_JSON=/tmp/exp26c_a6/release.json
+          curl -fsSL -H 'User-Agent: EIDOLEN-EXP26C-Preflight' https://api.github.com/repos/mlcommons/mlperf_client/releases/latest -o "$RELEASE_JSON"
+          CURL_RELEASE_EXIT=$?
+          if [ $CURL_RELEASE_EXIT -ne 0 ]; then
+            ERROR='RELEASE_QUERY_FAILED'
+          else
+            ASSET_URL=$(python3 - "$RELEASE_JSON" <<'PY'
+import json,sys
+r=json.load(open(sys.argv[1]))
+for a in r.get('assets',[]):
+    n=a.get('name','').lower()
+    if n.endswith('ubuntu-24.04.zip'):
+        print(a['browser_download_url']); break
+PY
+)
+            ASSET_NAME=$(python3 - "$RELEASE_JSON" <<'PY'
+import json,sys
+r=json.load(open(sys.argv[1]))
+for a in r.get('assets',[]):
+    n=a.get('name','').lower()
+    if n.endswith('ubuntu-24.04.zip'):
+        print(a['name']); break
+PY
+)
+            ASSET_SIZE=$(python3 - "$RELEASE_JSON" <<'PY'
+import json,sys
+r=json.load(open(sys.argv[1]))
+for a in r.get('assets',[]):
+    n=a.get('name','').lower()
+    if n.endswith('ubuntu-24.04.zip'):
+        print(a['size']); break
+PY
+)
+            RELEASE_TAG=$(python3 - "$RELEASE_JSON" <<'PY'
+import json,sys
+r=json.load(open(sys.argv[1])); print(r.get('tag_name',''))
+PY
+)
+            RELEASE_NAME=$(python3 - "$RELEASE_JSON" <<'PY'
+import json,sys
+r=json.load(open(sys.argv[1])); print(r.get('name',''))
+PY
+)
+            RELEASE_PUBLISHED=$(python3 - "$RELEASE_JSON" <<'PY'
+import json,sys
+r=json.load(open(sys.argv[1])); print(r.get('published_at',''))
+PY
+)
+            if [ -z "$ASSET_URL" ]; then ERROR='NO_UBUNTU_24_04_ASSET'; fi
+          fi
+
+          ZIP=/tmp/exp26c_a6/mlperf-ubuntu.zip
+          if [ -z "$ERROR" ]; then
+            curl -fL "$ASSET_URL" -o "$ZIP"
+            if [ $? -ne 0 ]; then ERROR='UBUNTU_ASSET_DOWNLOAD_FAILED'; fi
+          fi
+          if [ -z "$ERROR" ]; then
+            ZIP_SHA=$(sha256sum "$ZIP" | awk '{print $1}')
+            unzip -q "$ZIP" -d /tmp/exp26c_a6/extracted
+            if [ $? -ne 0 ]; then ERROR='UBUNTU_ASSET_EXTRACT_FAILED'; fi
+          fi
+
+          BIN=''
+          if [ -z "$ERROR" ]; then
+            while IFS= read -r f; do
+              if file "$f" | grep -Eqi 'ELF .* executable'; then BIN="$f"; break; fi
+            done < <(find /tmp/exp26c_a6/extracted -type f -iname '*mlperf*' -print)
+            if [ -z "$BIN" ]; then
+              while IFS= read -r f; do
+                if file "$f" | grep -Eqi 'ELF .* executable'; then BIN="$f"; break; fi
+              done < <(find /tmp/exp26c_a6/extracted -type f -print)
+            fi
+            if [ -z "$BIN" ]; then ERROR='NO_ELF_MLPERF_EXECUTABLE_FOUND'; fi
+          fi
+
+          if [ -n "$BIN" ]; then
+            chmod +x "$BIN"
+            BIN_SHA=$(sha256sum "$BIN" | awk '{print $1}')
+            BIN_SIZE=$(stat -c %s "$BIN")
+            "$BIN" --version > /tmp/exp26c_a6/version.txt 2>&1
+            VERSION_EXIT=$?
+            "$BIN" --list-models > /tmp/exp26c_a6/models.txt 2>&1
+            MODELS_EXIT=$?
+          else
+            VERSION_EXIT=999
+            MODELS_EXIT=999
+            : > /tmp/exp26c_a6/version.txt
+            : > /tmp/exp26c_a6/models.txt
+          fi
+
+          python3 - <<'PY'
+import json,os,platform,subprocess,datetime
+from pathlib import Path
+rel={}
+try: rel=json.load(open('/tmp/exp26c_a6/release.json'))
+except Exception: pass
+version=Path('/tmp/exp26c_a6/version.txt').read_text(errors='replace').splitlines()
+models=Path('/tmp/exp26c_a6/models.txt').read_text(errors='replace').splitlines()
+expected=['Llama 3.1 8B Instruct','Phi 4 Mini Instruct','Phi 4 Reasoning 14B','Qwen 3 8B','Flux 2 Klein 4B']
+joined='\n'.join(models)
+model_presence={x:(x in joined) for x in expected}
+err=os.environ.get('ERROR','')
+ve=int(os.environ.get('VERSION_EXIT','999'))
+me=int(os.environ.get('MODELS_EXIT','999'))
+if err:
+    terminal='ERROR_EXP26C_A6_UBUNTU_PROVIDER_PREFLIGHT__FIRST_ERROR_PRESERVED__NO_RETRY__EXTERNAL_0_OF_12'
+elif ve==0 and me==0 and all(model_presence.values()):
+    terminal='PASS_EXP26C_A6_UBUNTU_PROVIDER_PREFLIGHT__OFFICIAL_UBUNTU_24_04_ZIP_HASH_BOUND__ELF_CLI_HASH_BOUND__VERSION_AND_FIVE_MODEL_SURFACE_MATCH_WINDOWS_A4_R1__NO_SCIENTIFIC_SCORING__OWNER_CONTROLLED_GITHUB_PROVIDER_ONLY__EXTERNAL_0_OF_12'
+else:
+    terminal='FAIL_EXP26C_A6_UBUNTU_PROVIDER_PREFLIGHT__CLI_OR_MODEL_SURFACE_MISMATCH__NO_RETRY__EXTERNAL_0_OF_12'
+r={
+ 'stable_id':'LT-UOS-EIDOLEN-EXP26C-MLPERF-UBUNTU-PROVIDER-PREFLIGHT-A6-20260818',
+ 'parent_resource_audit':'LT-UOS-EIDOLEN-EXP26C-MLPERF-PROVIDER-HOSTED-PREFLIGHT-RECONCILIATION-A5-20260818',
+ 'record_type':'PROVIDER_HOSTED_CROSS_PLATFORM_STANDARD_BUILD_PREFLIGHT_ONLY',
+ 'timestamp_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+ 'runner_os':os.environ.get('RUNNER_OS'),
+ 'runner_arch':os.environ.get('RUNNER_ARCH'),
+ 'github_sha':os.environ.get('GITHUB_SHA'),
+ 'kernel':platform.platform(),
+ 'release_tag':os.environ.get('RELEASE_TAG',''),
+ 'release_name':os.environ.get('RELEASE_NAME',''),
+ 'release_published_at':os.environ.get('RELEASE_PUBLISHED',''),
+ 'asset_name':os.environ.get('ASSET_NAME',''),
+ 'asset_size':int(os.environ.get('ASSET_SIZE','0') or 0),
+ 'asset_sha256':os.environ.get('ZIP_SHA',''),
+ 'selected_binary':os.environ.get('BIN',''),
+ 'binary_size':int(os.environ.get('BIN_SIZE','0') or 0),
+ 'binary_sha256':os.environ.get('BIN_SHA',''),
+ 'version_exit_code':ve,
+ 'list_models_exit_code':me,
+ 'version_output':version,
+ 'list_models_output':models,
+ 'expected_windows_a4_r1_model_surface':expected,
+ 'model_surface_presence':model_presence,
+ 'cross_platform_model_surface_match':all(model_presence.values()) and me==0,
+ 'error':err or None,
+ 'scientific_execution':False,
+ 'exp26c_scientific_id_assigned':False,
+ 'independent_custody':False,
+ 'unaffiliated_execution':False,
+ 'independent_scoring_adjudication':False,
+ 'external_role_effect':'NONE',
+ 'strict_external_role_coverage':'0/12',
+ 'terminal':terminal,
+ 'claim_ceiling':'OWNER_CONTROLLED_PROVIDER_HOSTED_CROSS_PLATFORM_PREFLIGHT_ONLY__NO_MODEL_SCORING__NO_EQUAL_BUDGET_TRIAL__NO_HIDDEN_TASKS__NO_INDEPENDENT_CUSTODY__NO_UNAFFILIATED_ADJUDICATION__NO_PRODUCTION_SUPERIORITY'
+}
+Path('evidence/exp26c/mlperf_ubuntu_provider_preflight_a6.json').write_text(json.dumps(r,indent=2,sort_keys=True)+'\n')
+Path('evidence/exp26c/mlperf_ubuntu_provider_preflight_a6_terminal.txt').write_text(terminal+'\n')
+PY
+
+      - name: Commit immutable A6 provider receipt
+        if: always()
+        shell: bash
+        run: |
+          git config user.name 'eidolen-provider-preflight'
+          git config user.email 'actions@users.noreply.github.com'
+          git add evidence/exp26c/mlperf_ubuntu_provider_preflight_a6.json evidence/exp26c/mlperf_ubuntu_provider_preflight_a6_terminal.txt
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Record EXP26C MLPerf Ubuntu provider preflight A6'
+          git push origin HEAD:main

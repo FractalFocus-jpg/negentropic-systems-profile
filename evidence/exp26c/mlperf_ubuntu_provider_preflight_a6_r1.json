@@ -1,0 +1,58 @@
+{
+  "asset_name": "mlperf-client-2.0.0-c8d2dc0-ubuntu-24.04.zip",
+  "asset_sha256": "1a0034f2e3bf3fc0e47d843eeaedde88093779306645cb610f88ad820d79108d",
+  "asset_size": 7971488,
+  "asset_size_declared": 7971488,
+  "binary_sha256": "bd7ea555318349fd0bee46a0370b3968b3d0a135487764893935da887dd8ff78",
+  "binary_size": 22845008,
+  "claim_ceiling": "OWNER_CONTROLLED_PROVIDER_HOSTED_CROSS_PLATFORM_PREFLIGHT_ONLY__NO_MODEL_SCORING__NO_EQUAL_BUDGET_TRIAL__NO_HIDDEN_TASKS__NO_INDEPENDENT_CUSTODY__NO_UNAFFILIATED_ADJUDICATION__NO_PRODUCTION_SUPERIORITY__NO_FULL_UNIVERSALITY",
+  "cross_platform_model_surface_match": true,
+  "exp26c_scientific_id_assigned": false,
+  "expected_windows_a4_r1_model_surface": [
+    "Llama 3.1 8B Instruct",
+    "Phi 4 Mini Instruct",
+    "Phi 4 Reasoning 14B",
+    "Qwen 3 8B",
+    "Flux 2 Klein 4B"
+  ],
+  "external_role_effect": "NONE",
+  "github_sha": "b05d17901d22f90ad5518154a1c8224fb508ec62",
+  "independent_custody": false,
+  "independent_scoring_adjudication": false,
+  "kernel": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "list_models_exit_code": 0,
+  "list_models_output": [
+    "Supported models:",
+    "  Llama 3.1 8B Instruct  (llama_3_1_8b_instruct, Base)",
+    "  Phi 4 Mini Instruct  (phi_4_mini_instruct, Base)",
+    "  Phi 4 Reasoning 14B  (phi_4_reasoning_14b, Extended)",
+    "  Qwen 3 8B  (qwen_3_8b, Base)",
+    "  Flux 2 Klein 4B  (flux_2_klein_4b, Experimental)"
+  ],
+  "model_surface_presence": {
+    "Flux 2 Klein 4B": true,
+    "Llama 3.1 8B Instruct": true,
+    "Phi 4 Mini Instruct": true,
+    "Phi 4 Reasoning 14B": true,
+    "Qwen 3 8B": true
+  },
+  "predecessor_observation": "NO_PROVIDER_RECEIPT_OBSERVED; EXECUTION_UNCONFIRMED; NO SAME-ID RERUN PERFORMED",
+  "predecessor_workflow_id": "LT-UOS-EIDOLEN-EXP26C-MLPERF-UBUNTU-PROVIDER-PREFLIGHT-A6-20260818",
+  "record_type": "PROVIDER_HOSTED_CROSS_PLATFORM_STANDARD_BUILD_PREFLIGHT_ONLY",
+  "release_name": "MLPerf Client 2.0.0",
+  "release_published_at": "2026-08-18T14:55:28Z",
+  "release_tag": "v2.0",
+  "runner_arch": "X64",
+  "runner_os": "Linux",
+  "scientific_execution": false,
+  "selected_binary": "/tmp/exp26c_a6_r1/extracted/mlperf-linux",
+  "stable_id": "LT-UOS-EIDOLEN-EXP26C-MLPERF-UBUNTU-PROVIDER-PREFLIGHT-A6-R1-20260818",
+  "strict_external_role_coverage": "0/12",
+  "terminal": "PASS_EXP26C_A6_R1_UBUNTU_PROVIDER_PREFLIGHT__OFFICIAL_UBUNTU_24_04_ZIP_HASH_BOUND__ELF_CLI_HASH_BOUND__VERSION_AND_FIVE_MODEL_SURFACE_MATCH_WINDOWS_A4_R1__SELF_CONTAINED_RECEIPT__NO_SCIENTIFIC_SCORING__OWNER_CONTROLLED_GITHUB_PROVIDER_ONLY__EXTERNAL_0_OF_12",
+  "timestamp_utc": "2026-08-19T01:20:57.089595+00:00",
+  "unaffiliated_execution": false,
+  "version_exit_code": 0,
+  "version_output": [
+    "Application Version: 2.0.0.c8d2dc0 MLCommons Standard Build"
+  ]
+}

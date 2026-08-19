@@ -1,0 +1,154 @@
+name: EXP26C MLPerf macOS Accelerator Binding A7-R1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/exp26c-mlperf-macos-accelerator-binding-a7-r1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  accelerator-binding:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Execute self-contained Apple-Silicon / Metal binding preflight
+        shell: bash
+        run: |
+          set +e
+          mkdir -p evidence/exp26c /tmp/exp26c_a7_r1
+          python3 - <<'PY'
+          import datetime, hashlib, json, os, pathlib, re, stat, subprocess, urllib.request, zipfile
+          from pathlib import Path
+
+          stable_id='LT-UOS-EIDOLEN-EXP26C-MLPERF-MACOS-ACCELERATOR-BINDING-A7-R1-20260818'
+          work=Path('/tmp/exp26c_a7_r1')
+          receipt=Path('evidence/exp26c/mlperf_macos_accelerator_binding_a7_r1.json')
+          terminal_path=Path('evidence/exp26c/mlperf_macos_accelerator_binding_a7_r1_terminal.txt')
+          out={
+            'stable_id':stable_id,
+            'predecessor_workflow_id':'LT-UOS-EIDOLEN-EXP26C-MLPERF-MACOS-ACCELERATOR-BINDING-A7-20260818',
+            'predecessor_observation':'NO_PROVIDER_RECEIPT_OBSERVED; EXECUTION_UNCONFIRMED; NO SAME-ID RERUN PERFORMED',
+            'record_type':'PROVIDER_HOSTED_ACCELERATOR_RESOURCE_BINDING_PREFLIGHT_ONLY',
+            'timestamp_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            'github_sha':os.environ.get('GITHUB_SHA'),
+            'github_ref':os.environ.get('GITHUB_REF'),
+            'scientific_execution':False,
+            'exp26c_scientific_id_assigned':False,
+            'independent_custody':False,
+            'unaffiliated_execution':False,
+            'independent_scoring_adjudication':False,
+            'external_role_effect':'NONE',
+            'strict_external_role_coverage':'0/12'
+          }
+          terminal=None
+          try:
+            uname=subprocess.run(['uname','-a'],capture_output=True,text=True,timeout=30).stdout.strip()
+            machine=subprocess.run(['uname','-m'],capture_output=True,text=True,timeout=30).stdout.strip()
+            sp=subprocess.run(['system_profiler','SPHardwareDataType','SPDisplaysDataType'],capture_output=True,text=True,timeout=120)
+            sptext=(sp.stdout+sp.stderr)
+            out['uname']=uname; out['machine']=machine; out['system_profiler_excerpt']=sptext[:16000]
+            arm64=(machine.strip().lower()=='arm64')
+            apple_chip=bool(re.search(r'Chip:\s*Apple|Apple M[1-9]|Chipset Model:\s*Apple',sptext,re.I))
+            metal_visible=bool(re.search(r'Metal Support|Metal Family|Apple M[1-9]',sptext,re.I))
+            out['arm64_verified']=arm64; out['apple_silicon_visible']=apple_chip; out['metal_or_apple_gpu_visible']=metal_visible
+
+            req=urllib.request.Request('https://api.github.com/repos/mlcommons/mlperf_client/releases/latest',headers={'User-Agent':'EIDOLEN-EXP26C-A7-R1'})
+            with urllib.request.urlopen(req,timeout=60) as r:
+              release=json.load(r)
+            assets=[a for a in release.get('assets',[]) if a.get('name','').lower().endswith('macos.zip')]
+            if not assets: raise RuntimeError('NO_MACOS_RELEASE_ASSET')
+            asset=assets[0]
+            out.update({'release_tag':release.get('tag_name'),'release_name':release.get('name'),'release_published_at':release.get('published_at'),'asset_name':asset['name'],'asset_size_declared':asset.get('size')})
+            zpath=work/asset['name']; urllib.request.urlretrieve(asset['browser_download_url'],zpath)
+            zb=zpath.read_bytes(); out['asset_size']=len(zb); out['asset_sha256']=hashlib.sha256(zb).hexdigest()
+            exdir=work/'extracted'; exdir.mkdir(exist_ok=True)
+            with zipfile.ZipFile(zpath) as z: z.extractall(exdir)
+            candidates=[p for p in exdir.rglob('*') if p.is_file() and 'mlperf' in p.name.lower()]
+            if not candidates: raise RuntimeError('NO_MACOS_MLPERF_EXECUTABLE_FOUND')
+            # Prefer a Mach-O executable according to file(1).
+            scored=[]
+            for p in candidates:
+              f=subprocess.run(['file',str(p)],capture_output=True,text=True).stdout
+              scored.append((('Mach-O' in f),p,f))
+            scored.sort(key=lambda x:(not x[0],len(str(x[1]))))
+            exe=scored[0][1]
+            exe.chmod(exe.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+            eb=exe.read_bytes(); out['selected_executable']=str(exe); out['executable_file_type']=scored[0][2].strip(); out['executable_size']=len(eb); out['executable_sha256']=hashlib.sha256(eb).hexdigest()
+            v=subprocess.run([str(exe),'--version'],capture_output=True,text=True,timeout=120)
+            m=subprocess.run([str(exe),'--list-models'],capture_output=True,text=True,timeout=120)
+            out['version_exit_code']=v.returncode; out['version_output']=(v.stdout+v.stderr).splitlines()
+            out['list_models_exit_code']=m.returncode; out['list_models_output']=(m.stdout+m.stderr).splitlines()
+
+            configs={
+              'llama31_metal':'https://raw.githubusercontent.com/mlcommons/mlperf_client/main/data/configs/vendors_default/llm/Llama3.1/macOS_llamacpp-Metal_GPU.json',
+              'phi4mini_metal':'https://raw.githubusercontent.com/mlcommons/mlperf_client/main/data/configs/vendors_default/llm/phi4mini/macOS_llamacpp-Metal_GPU.json',
+              'qwen3_metal':'https://raw.githubusercontent.com/mlcommons/mlperf_client/main/data/configs/vendors_default/llm/extended/qwen3/macOS_llamacpp-Metal_GPU.json'
+            }
+            crec={}
+            for k,u in configs.items():
+              p=work/(k+'.json')
+              try:
+                req=urllib.request.Request(u,headers={'User-Agent':'EIDOLEN-EXP26C-A7-R1'})
+                with urllib.request.urlopen(req,timeout=60) as r: b=r.read()
+                p.write_bytes(b)
+                j=json.loads(b)
+                ep=j['Scenarios'][0]['ExecutionProviders'][0]
+                crec[k]={'url':u,'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest(),'fetched':True,'execution_provider':ep.get('Name'),'execution_config':ep.get('Config')}
+              except Exception as e:
+                crec[k]={'url':u,'fetched':False,'error':repr(e)}
+            out['official_metal_configs']=crec
+            all_cfg=all(x.get('fetched') for x in crec.values())
+
+            enum_cmd=[str(exe),'-c',str(work/'llama31_metal.json'),'--enumerate-devices','--temp-dir',str(work/'temp'),'-d',str(work/'data')]
+            enum=subprocess.run(enum_cmd,capture_output=True,text=True,timeout=420)
+            enum_text=(enum.stdout+enum.stderr)
+            out['enumerate_devices_command']=enum_cmd
+            out['enumerate_devices_exit_code']=enum.returncode
+            out['enumerate_devices_output']=enum_text.splitlines()[:1000]
+            device_visible=(enum.returncode==0 and len(enum_text.strip())>0 and bool(re.search(r'Metal|GPU|device|Apple',enum_text,re.I)))
+            out['metal_device_enumerated']=device_visible
+            out['bound_stack_candidate']={
+              'model_family':'Llama 3.1 8B',
+              'runtime':'llama.cpp',
+              'backend':'Metal',
+              'hardware':'Apple Silicon GPU',
+              'provider_host':'GitHub Actions macos-15',
+              'resource_bound':bool(arm64 and apple_chip and metal_visible and all_cfg and device_visible)
+            }
+            gate=bool(v.returncode==0 and m.returncode==0 and arm64 and apple_chip and metal_visible and all_cfg and device_visible)
+            if gate:
+              terminal='PASS_EXP26C_A7_R1_MACOS_ACCELERATOR_RESOURCE_BINDING__APPLE_SILICON_ARM64_AND_METAL_VISIBLE__OFFICIAL_MLPERF_MACOS_BINARY_HASH_BOUND__THREE_OFFICIAL_METAL_MODEL_CONFIGS_HASH_BOUND__LLAMA31_METAL_DEVICE_ENUMERATED__ONE_ACCELERATOR_STACK_RESOURCE_BOUND__NO_MODEL_SCORING__OWNER_CONTROLLED_GITHUB_PROVIDER_ONLY__EXTERNAL_0_OF_12'
+            else:
+              terminal='FAIL_EXP26C_A7_R1_MACOS_ACCELERATOR_RESOURCE_BINDING__BOUND_PREFLIGHT_OR_DEVICE_ENUMERATION_GATE_INCOMPLETE__NO_SCIENTIFIC_MODEL_SCORING__EXTERNAL_0_OF_12'
+          except subprocess.TimeoutExpired as e:
+            out['error']='TIMEOUT:'+repr(e)
+            terminal='TIMEOUT_EXP26C_A7_R1_MACOS_ACCELERATOR_RESOURCE_BINDING__DEVICE_OR_RUNTIME_PREFLIGHT_TIMEOUT__FIRST_TERMINAL_PRESERVED__NO_SAME_ID_RETRY__EXTERNAL_0_OF_12'
+          except Exception as e:
+            out['error']=repr(e)
+            terminal='ERROR_EXP26C_A7_R1_MACOS_ACCELERATOR_RESOURCE_BINDING__SELF_CONTAINED_RECEIPT_ERROR__FIRST_ERROR_PRESERVED__NO_SAME_ID_RETRY__EXTERNAL_0_OF_12'
+          out['terminal']=terminal
+          out['three_stack_scientific_execution']=False
+          out['claim_ceiling']='OWNER_CONTROLLED_PROVIDER_HOSTED_ACCELERATOR_RESOURCE_BINDING_PREFLIGHT_ONLY__AT_MOST_ONE_STACK_RESOURCE_BOUND__NO_THREE_STACK_SCIENCE__NO_MODEL_SCORING__NO_EQUAL_BUDGET_TRIAL__NO_HIDDEN_TASKS__NO_INDEPENDENT_CUSTODY__NO_UNAFFILIATED_ADJUDICATION__NO_PRODUCTION_SUPERIORITY__NO_FULL_UNIVERSALITY'
+          receipt.write_text(json.dumps(out,indent=2,sort_keys=True)+'\n')
+          terminal_path.write_text(terminal+'\n')
+          PY
+
+      - name: Commit immutable A7-R1 provider receipt
+        if: always()
+        shell: bash
+        run: |
+          git config user.name 'eidolen-provider-preflight'
+          git config user.email 'actions@users.noreply.github.com'
+          git add evidence/exp26c/mlperf_macos_accelerator_binding_a7_r1.json evidence/exp26c/mlperf_macos_accelerator_binding_a7_r1_terminal.txt
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Record EXP26C MLPerf macOS accelerator binding A7-R1'
+          git push origin HEAD:main

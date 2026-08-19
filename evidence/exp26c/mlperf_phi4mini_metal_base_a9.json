@@ -1,0 +1,58 @@
+{
+  "artifacts": [],
+  "asset_name": "mlperf-client-2.0.0-c8d2dc0-macos.zip",
+  "asset_sha256": "75651ee2f516d543fbafe27cef284c739d2eb563cc1f1fdcadfa2445787ad8c6",
+  "asset_size": 12751530,
+  "base_prompt_count": 10,
+  "claim_ceiling": "PROVIDER_HOSTED_MLPERF_CLIENT_2_0_PHI4MINI_STANDARD_SELF_RUN_RESOURCE_VALIDATION_ONLY__UNVERIFIED__NO_UOS_CANDIDATE_SUPERIORITY__NO_THREE_MATERIAL_STACKS__NO_HIDDEN_EVALUATOR_TASKS__NO_INDEPENDENT_RAW_CUSTODY__NO_UNAFFILIATED_SCORING_ADJUDICATION__NO_PRODUCTION_SUPERIORITY__NO_FULL_UNIVERSALITY",
+  "command": [
+    "/tmp/exp26c_a9/extracted/mlperf-mac",
+    "-c",
+    "/tmp/exp26c_a9/phi4mini_metal.json",
+    "--temp-dir",
+    "/tmp/exp26c_a9/temp",
+    "-d",
+    "/tmp/exp26c_a9/data",
+    "--results-dir",
+    "/tmp/exp26c_a9/results",
+    "--prompts",
+    "base"
+  ],
+  "config_iterations": 3,
+  "config_sha256": "3969fe37510f95f19275d4a9f45879fbc2909e3472ec239fbeec9b167206e545",
+  "config_url": "https://raw.githubusercontent.com/mlcommons/mlperf_client/main/data/configs/vendors_default/llm/phi4mini/macOS_llamacpp-Metal_GPU.json",
+  "evidence_class": "L1_EXTERNAL_STANDARD_SELF_RUN_UNVERIFIED",
+  "executable_sha256": "fced8c4ccf493bb0707cc94ced09fe71b1c710e3e9edbf6c85bbc013d1596be4",
+  "executable_size": 48431296,
+  "execution_provider": {
+    "Config": {
+      "backend": "Metal",
+      "device_type": "GPU",
+      "gpu_layers": 999
+    },
+    "Name": "llama-cpp"
+  },
+  "exp26c_scientific_id_assigned": false,
+  "github_sha": "d179d47e2d03a026e6a7056e9dc02d08ea444de3",
+  "independent_custody": false,
+  "independent_scoring_adjudication": false,
+  "mlcommons_reviewed_verified": false,
+  "model_files": [],
+  "model_url": "https://client.mlcommons-storage.org/deps/2.0/scenario_files/models/phi4/mini-instruct/GGML/microsoft_Phi-4-mini-instruct-Q4_0.gguf",
+  "parent_id": "LT-UOS-EIDOLEN-EXP26C-MLPERF-MACOS-MODEL-FAMILY-TRIAD-BINDING-A8-20260818",
+  "record_type": "PROVIDER_HOSTED_RECOGNIZED_EXTERNAL_STANDARD_SELF_RUN_RESOURCE_VALIDATION_ONLY",
+  "release_tag": "v2.0",
+  "result_files": [],
+  "run_exit_code": 1,
+  "run_output": [
+    "Incorrect options provided, aborting...",
+    "Use -h or --help for more information."
+  ],
+  "scientific_uos_candidate_execution": false,
+  "stable_id": "LT-UOS-EIDOLEN-EXP26C-MLPERF-PHI4MINI-METAL-BASE-WORKLOAD-A9-20260818",
+  "strict_external_role_coverage": "0/12",
+  "terminal": "FAIL_EXP26C_A9_PHI4MINI_METAL_BASE_WORKLOAD__OFFICIAL_STANDARD_SELF_RUN_NONZERO_EXIT__FIRST_TERMINAL_PRESERVED__NO_SAME_ID_RETRY__EXTERNAL_0_OF_12",
+  "timestamp_utc": "2026-08-19T01:31:44.920347+00:00",
+  "tokenizer_url": "https://client.mlcommons-storage.org/deps/2.0/scenario_files/models/phi4/mini-instruct/GGML/tokenizer.zip",
+  "unaffiliated_execution": false
+}

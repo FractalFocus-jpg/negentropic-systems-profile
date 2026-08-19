@@ -1,0 +1,100 @@
+name: EXP26C MLPerf Phi4Mini Metal Base Workload A9
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/exp26c-mlperf-phi4mini-metal-base-a9.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  standard-run:
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Execute official Phi4Mini Metal base workload
+        shell: bash
+        run: |
+          set +e
+          mkdir -p evidence/exp26c /tmp/exp26c_a9/data /tmp/exp26c_a9/temp /tmp/exp26c_a9/results
+          python3 - <<'PY'
+          import datetime, hashlib, json, os, pathlib, stat, subprocess, urllib.request, zipfile
+          from pathlib import Path
+
+          stable_id='LT-UOS-EIDOLEN-EXP26C-MLPERF-PHI4MINI-METAL-BASE-WORKLOAD-A9-20260818'
+          parent='LT-UOS-EIDOLEN-EXP26C-MLPERF-MACOS-MODEL-FAMILY-TRIAD-BINDING-A8-20260818'
+          work=Path('/tmp/exp26c_a9'); data=work/'data'; temp=work/'temp'; results=work/'results'
+          receipt=Path('evidence/exp26c/mlperf_phi4mini_metal_base_a9.json'); terminal_file=Path('evidence/exp26c/mlperf_phi4mini_metal_base_a9_terminal.txt')
+          out={'stable_id':stable_id,'parent_id':parent,'record_type':'PROVIDER_HOSTED_RECOGNIZED_EXTERNAL_STANDARD_SELF_RUN_RESOURCE_VALIDATION_ONLY','timestamp_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'github_sha':os.environ.get('GITHUB_SHA'),'evidence_class':'L1_EXTERNAL_STANDARD_SELF_RUN_UNVERIFIED','scientific_uos_candidate_execution':False,'exp26c_scientific_id_assigned':False,'independent_custody':False,'unaffiliated_execution':False,'independent_scoring_adjudication':False,'mlcommons_reviewed_verified':False,'strict_external_role_coverage':'0/12'}
+          terminal=None
+          try:
+            req=urllib.request.Request('https://api.github.com/repos/mlcommons/mlperf_client/releases/latest',headers={'User-Agent':'EIDOLEN-EXP26C-A9'})
+            with urllib.request.urlopen(req,timeout=60) as r: release=json.load(r)
+            asset=next(a for a in release.get('assets',[]) if a.get('name','').lower().endswith('macos.zip'))
+            zpath=work/asset['name']; urllib.request.urlretrieve(asset['browser_download_url'],zpath); zb=zpath.read_bytes(); out.update({'release_tag':release.get('tag_name'),'asset_name':asset['name'],'asset_size':len(zb),'asset_sha256':hashlib.sha256(zb).hexdigest()})
+            exdir=work/'extracted'; exdir.mkdir(exist_ok=True)
+            with zipfile.ZipFile(zpath) as z:z.extractall(exdir)
+            candidates=[]
+            for p in exdir.rglob('*'):
+              if p.is_file() and 'mlperf' in p.name.lower():
+                ft=subprocess.run(['file',str(p)],capture_output=True,text=True).stdout
+                if 'Mach-O' in ft:candidates.append((p,ft))
+            exe=sorted(candidates,key=lambda x:len(str(x[0])))[0][0]; exe.chmod(exe.stat().st_mode|stat.S_IXUSR|stat.S_IXGRP|stat.S_IXOTH); eb=exe.read_bytes(); out['executable_sha256']=hashlib.sha256(eb).hexdigest(); out['executable_size']=len(eb)
+            cfg_url='https://raw.githubusercontent.com/mlcommons/mlperf_client/main/data/configs/vendors_default/llm/phi4mini/macOS_llamacpp-Metal_GPU.json'
+            req=urllib.request.Request(cfg_url,headers={'User-Agent':'EIDOLEN-EXP26C-A9'}); cb=urllib.request.urlopen(req,timeout=60).read(); cfg=work/'phi4mini_metal.json'; cfg.write_bytes(cb); cj=json.loads(cb)
+            out['config_url']=cfg_url; out['config_sha256']=hashlib.sha256(cb).hexdigest(); out['config_iterations']=cj['Scenarios'][0]['Iterations']; out['base_prompt_count']=len(cj['Scenarios'][0]['InputFilePath']['base']); out['model_url']=cj['Scenarios'][0]['Models'][0]['FilePath']; out['tokenizer_url']=cj['Scenarios'][0]['Models'][0]['TokenizerPath']; out['execution_provider']=cj['Scenarios'][0]['ExecutionProviders'][0]
+            cmd=[str(exe),'-c',str(cfg),'--temp-dir',str(temp),'-d',str(data),'--results-dir',str(results),'--prompts','base']
+            out['command']=cmd
+            try:
+              r=subprocess.run(cmd,capture_output=True,text=True,timeout=3300); txt=r.stdout+r.stderr; out['run_exit_code']=r.returncode; out['run_output']=txt.splitlines()[-2000:]
+            except subprocess.TimeoutExpired as e:
+              out['timeout_seconds']=3300; out['partial_stdout']=(e.stdout.decode(errors='replace') if isinstance(e.stdout,bytes) else (e.stdout or ''))[-50000:]; out['partial_stderr']=(e.stderr.decode(errors='replace') if isinstance(e.stderr,bytes) else (e.stderr or ''))[-50000:]
+              r=None
+            artifacts=[]
+            for root in [data,results,temp]:
+              for p in root.rglob('*'):
+                if not p.is_file():continue
+                rel=str(p.relative_to(work)); size=p.stat().st_size
+                rec={'path':rel,'size':size}
+                if size <= 8_000_000_000:
+                  h=hashlib.sha256()
+                  with p.open('rb') as f:
+                    for chunk in iter(lambda:f.read(8*1024*1024),b''):h.update(chunk)
+                  rec['sha256']=h.hexdigest()
+                artifacts.append(rec)
+            out['artifacts']=artifacts
+            model_files=[x for x in artifacts if x['path'].lower().endswith('.gguf')]
+            result_files=[x for x in artifacts if x['path'].startswith('results/')]
+            out['model_files']=model_files; out['result_files']=result_files
+            if r is None:
+              terminal='TIMEOUT_EXP26C_A9_PHI4MINI_METAL_BASE_WORKLOAD__OFFICIAL_STANDARD_SELF_RUN_EXCEEDED_FROZEN_3300S_BUDGET__FIRST_TERMINAL_PRESERVED__NO_SAME_ID_RETRY__EXTERNAL_0_OF_12'
+            elif r.returncode==0 and model_files and result_files:
+              terminal='PASS_EXP26C_A9_PHI4MINI_METAL_BASE_WORKLOAD__OFFICIAL_MLPERF_CLIENT_2_0_CONFIG_UNCHANGED__10_BASE_PROMPTS__3_ITERATIONS__MODEL_AND_RESULTS_HASH_BOUND__PROVIDER_HOSTED_L1_SELF_RUN_UNVERIFIED__NO_UOS_SUPERIORITY_CLAIM__EXTERNAL_0_OF_12'
+            elif r.returncode==0:
+              terminal='FAIL_EXP26C_A9_PHI4MINI_METAL_BASE_WORKLOAD__CLI_EXIT_ZERO_BUT_REQUIRED_MODEL_OR_RESULT_ARTIFACTS_MISSING__UNVERIFIED_SELF_RUN__EXTERNAL_0_OF_12'
+            else:
+              terminal='FAIL_EXP26C_A9_PHI4MINI_METAL_BASE_WORKLOAD__OFFICIAL_STANDARD_SELF_RUN_NONZERO_EXIT__FIRST_TERMINAL_PRESERVED__NO_SAME_ID_RETRY__EXTERNAL_0_OF_12'
+          except Exception as e:
+            out['error']=repr(e); terminal='ERROR_EXP26C_A9_PHI4MINI_METAL_BASE_WORKLOAD__FIRST_ERROR_PRESERVED__NO_SAME_ID_RETRY__EXTERNAL_0_OF_12'
+          out['terminal']=terminal; out['claim_ceiling']='PROVIDER_HOSTED_MLPERF_CLIENT_2_0_PHI4MINI_STANDARD_SELF_RUN_RESOURCE_VALIDATION_ONLY__UNVERIFIED__NO_UOS_CANDIDATE_SUPERIORITY__NO_THREE_MATERIAL_STACKS__NO_HIDDEN_EVALUATOR_TASKS__NO_INDEPENDENT_RAW_CUSTODY__NO_UNAFFILIATED_SCORING_ADJUDICATION__NO_PRODUCTION_SUPERIORITY__NO_FULL_UNIVERSALITY'
+          receipt.write_text(json.dumps(out,indent=2,sort_keys=True)+'\n'); terminal_file.write_text(terminal+'\n')
+          PY
+
+      - name: Commit immutable A9 provider receipt
+        if: always()
+        shell: bash
+        run: |
+          git config user.name 'eidolen-provider-preflight'
+          git config user.email 'actions@users.noreply.github.com'
+          git add evidence/exp26c/mlperf_phi4mini_metal_base_a9.json evidence/exp26c/mlperf_phi4mini_metal_base_a9_terminal.txt
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Record EXP26C MLPerf Phi4Mini Metal base workload A9'
+          git push origin HEAD:main

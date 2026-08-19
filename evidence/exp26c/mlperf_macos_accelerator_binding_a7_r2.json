@@ -1,0 +1,123 @@
+{
+  "apple_silicon_visible": true,
+  "arm64_verified": true,
+  "asset_name": "mlperf-client-2.0.0-c8d2dc0-macos.zip",
+  "asset_sha256": "75651ee2f516d543fbafe27cef284c739d2eb563cc1f1fdcadfa2445787ad8c6",
+  "asset_size": 12751530,
+  "bound_stack_candidate": {
+    "backend": "Metal",
+    "hardware": "Apple Silicon GPU",
+    "model_family": "Llama 3.1 8B",
+    "provider_host": "GitHub Actions macos-15",
+    "resource_bound": true,
+    "runtime": "llama.cpp"
+  },
+  "claim_ceiling": "OWNER_CONTROLLED_PROVIDER_HOSTED_ACCELERATOR_RESOURCE_BINDING_PREFLIGHT_ONLY__AT_MOST_ONE_STACK_RESOURCE_BOUND__NO_THREE_STACK_SCIENCE__NO_MODEL_SCORING__NO_EQUAL_BUDGET_TRIAL__NO_HIDDEN_TASKS__NO_INDEPENDENT_CUSTODY__NO_UNAFFILIATED_ADJUDICATION__NO_PRODUCTION_SUPERIORITY__NO_FULL_UNIVERSALITY",
+  "enumerate_devices_exit_code": 0,
+  "enumerate_devices_output": [
+    "The default logger configuration file is used.",
+    "Starting...",
+    "Application Version: 2.0.0.c8d2dc0 MLCommons Standard Build",
+    "Using scenarios from /tmp/exp26c_a7_r2/llama31_metal.json",
+    "Configuring scenarios...",
+    "",
+    "Configuration tested by MLCommons",
+    "",
+    "Enumerating devices for llama-cpp",
+    "\tDevice ID: 0, Device Name: Apple Paravirtual device",
+    "",
+    "",
+    "Finished running scenario Llama3, model Llama 3.1 8B Instruct in 165.935746 seconds",
+    "No benchmark results to display.",
+    "",
+    "Press any key to continue...ggml_metal_device_init: tensor API disabled for pre-M5 and pre-A19 devices",
+    "ggml_metal_library_init: using embedded metal library",
+    "ggml_metal_library_init: loaded in 14.270 sec",
+    "ggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)",
+    "ggml_metal_device_init: GPU name:   MTL0 (Apple Paravirtual device)",
+    "ggml_metal_device_init: GPU family: MTLGPUFamilyApple5  (1005)",
+    "ggml_metal_device_init: GPU family: MTLGPUFamilyCommon3 (3003)",
+    "ggml_metal_device_init: simdgroup reduction   = false",
+    "ggml_metal_device_init: simdgroup matrix mul. = false",
+    "ggml_metal_device_init: has unified memory    = true",
+    "ggml_metal_device_init: has bfloat            = false",
+    "ggml_metal_device_init: has tensor            = false",
+    "ggml_metal_device_init: use residency sets    = true",
+    "ggml_metal_device_init: use shared buffers    = true",
+    "ggml_metal_device_init: recommendedMaxWorkingSetSize  =  5010.80 MB"
+  ],
+  "executable_file_type": "/tmp/exp26c_a7_r2/extracted/mlperf-mac: Mach-O 64-bit executable arm64",
+  "executable_sha256": "fced8c4ccf493bb0707cc94ced09fe71b1c710e3e9edbf6c85bbc013d1596be4",
+  "executable_size": 48431296,
+  "exp26c_scientific_id_assigned": false,
+  "external_role_effect": "NONE",
+  "github_sha": "f032253e46c3dd33d32069ed963bec4923fe86f7",
+  "independent_custody": false,
+  "independent_scoring_adjudication": false,
+  "list_models_exit_code": 0,
+  "list_models_output": [
+    "Supported models:",
+    "  Llama 3.1 8B Instruct  (llama_3_1_8b_instruct, Base)",
+    "  Phi 4 Mini Instruct  (phi_4_mini_instruct, Base)",
+    "  Phi 4 Reasoning 14B  (phi_4_reasoning_14b, Extended)",
+    "  Qwen 3 8B  (qwen_3_8b, Base)",
+    "  Flux 2 Klein 4B  (flux_2_klein_4b, Experimental)"
+  ],
+  "machine": "arm64",
+  "metal_device_enumerated": true,
+  "metal_or_apple_gpu_visible": true,
+  "official_metal_configs": {
+    "llama31_metal": {
+      "bytes": 2866,
+      "execution_config": {
+        "backend": "Metal",
+        "device_type": "GPU",
+        "gpu_layers": 999
+      },
+      "execution_provider": "llama-cpp",
+      "sha256": "a4d3ca4429126bc27b8b4c52ea09574ef92c27e6ccbd7ebe617e8400c4c55792",
+      "url": "https://raw.githubusercontent.com/mlcommons/mlperf_client/main/data/configs/vendors_default/llm/Llama3.1/macOS_llamacpp-Metal_GPU.json"
+    },
+    "phi4mini_metal": {
+      "bytes": 2878,
+      "execution_config": {
+        "backend": "Metal",
+        "device_type": "GPU",
+        "gpu_layers": 999
+      },
+      "execution_provider": "llama-cpp",
+      "sha256": "3969fe37510f95f19275d4a9f45879fbc2909e3472ec239fbeec9b167206e545",
+      "url": "https://raw.githubusercontent.com/mlcommons/mlperf_client/main/data/configs/vendors_default/llm/phi4mini/macOS_llamacpp-Metal_GPU.json"
+    },
+    "qwen3_metal": {
+      "bytes": 3131,
+      "execution_config": {
+        "backend": "Metal",
+        "device_type": "GPU",
+        "gpu_layers": 999
+      },
+      "execution_provider": "llama-cpp",
+      "sha256": "b839f11dd5324333943489ebcaa68eb6fef5c6c32aad7018eda388938f450c8a",
+      "url": "https://raw.githubusercontent.com/mlcommons/mlperf_client/main/data/configs/vendors_default/llm/extended/qwen3/macOS_llamacpp-Metal_GPU.json"
+    }
+  },
+  "parent_id": "LT-UOS-EIDOLEN-EXP26C-MLPERF-MACOS-ACCELERATOR-BINDING-A7-R1-20260818",
+  "parent_terminal": "FAIL_EXP26C_A7_R1_MACOS_ACCELERATOR_RESOURCE_BINDING__BOUND_PREFLIGHT_OR_DEVICE_ENUMERATION_GATE_INCOMPLETE__NO_SCIENTIFIC_MODEL_SCORING__EXTERNAL_0_OF_12",
+  "record_type": "PROVIDER_HOSTED_ACCELERATOR_RESOURCE_BINDING_PREFLIGHT_ONLY",
+  "release_tag": "v2.0",
+  "repair_delta": "CREATE_DATA_AND_TEMP_DIRECTORIES_BEFORE_IDENTICAL_DEVICE_ENUMERATION_GATE",
+  "scientific_execution": false,
+  "selected_executable": "/tmp/exp26c_a7_r2/extracted/mlperf-mac",
+  "stable_id": "LT-UOS-EIDOLEN-EXP26C-MLPERF-MACOS-ACCELERATOR-BINDING-A7-R2-20260818",
+  "strict_external_role_coverage": "0/12",
+  "system_profiler_excerpt": "Hardware:\n\n    Hardware Overview:\n\n      Model Name: Apple Virtual Machine 1\n      Model Identifier: VirtualMac2,1\n      Model Number: VM0001LL/A\n      Chip: Apple M1 (Virtual)\n      Total Number of Cores: 3\n      Memory: 7 GB\n      System Firmware Version: mBoot-18000.121.3\n      OS Loader Version: 11881.140.96.701.1\n      Serial Number (system): ZHCWC7R77M\n      Hardware UUID: 2CFDC7EC-8F5C-59D4-9CFD-1FA32859B300\n      Provisioning UDID: 71f75c0202a935ed341fbaee8deb25c42a234ac2\n      Activation Lock Status: Disabled\n\n",
+  "terminal": "PASS_EXP26C_A7_R2_MACOS_ACCELERATOR_RESOURCE_BINDING__PARENT_FAIL_PRESERVED__APPLE_SILICON_ARM64_AND_METAL_VISIBLE__OFFICIAL_MLPERF_BINARY_AND_THREE_METAL_CONFIGS_HASH_BOUND__LLAMA31_METAL_DEVICE_ENUMERATED__ONE_ACCELERATOR_STACK_RESOURCE_BOUND__NO_MODEL_SCORING__OWNER_CONTROLLED_GITHUB_PROVIDER_ONLY__EXTERNAL_0_OF_12",
+  "three_stack_scientific_execution": false,
+  "timestamp_utc": "2026-08-19T01:23:40.994806+00:00",
+  "unaffiliated_execution": false,
+  "uname": "Darwin iad20-fj917-94992947-9115-47a8-bed0-0f6a2beb487f-7AA07E17A61E.local 24.6.0 Darwin Kernel Version 24.6.0: Tue Apr 21 20:18:00 PDT 2026; root:xnu-11417.140.69.710.16~1/RELEASE_ARM64_VMAPPLE arm64",
+  "version_exit_code": 0,
+  "version_output": [
+    "Application Version: 2.0.0.c8d2dc0 MLCommons Standard Build"
+  ]
+}

@@ -1,0 +1,229 @@
+{
+  "artifacts": [
+    {
+      "path": "data/phi4mini/data_csv2json.json",
+      "sha256": "2c3fd459f2361ddbbf997687e2c60dae0b477a297e416f293080eefc0c056cc1",
+      "size": 2598
+    },
+    {
+      "path": "data/phi4mini/greedy-prompt_t0.677207.json",
+      "sha256": "1fd5db41f97ba8eb12861aba4cf404d0c13cff6ebb3a6642ee5ed2d3dc0a4401",
+      "size": 863
+    },
+    {
+      "path": "data/phi4mini/performance_counter_group_cpp_2k.json",
+      "sha256": "006d3555743d05dfaacda31bc211b979ebc268c81377f20f1dff95fb56504d5c",
+      "size": 7739
+    },
+    {
+      "path": "data/phi4mini/booksum_4k.json",
+      "sha256": "7c0d0e4dc681c1db39a89cfe040f56b8088e5d575050444b88101cfd0cdd4190",
+      "size": 13969
+    },
+    {
+      "path": "data/phi4mini/downloader_cpp_4k.json",
+      "sha256": "4a2bee2f9b312ac987e31a623c3530798a7971b68e69df4486f2ac7bc53258bf",
+      "size": 14686
+    },
+    {
+      "path": "data/phi4mini/generation-greedy-results.json",
+      "sha256": "c0632cdc4bb6e71822a427e6a99023d2a77d0bc040580ecec711a441a31b0965",
+      "size": 780
+    },
+    {
+      "path": "data/phi4mini/greedy-prompt_niv.123362.json",
+      "sha256": "0ef936ab9a548a324c71611ef404e8f60bafe4b6e2fae643fcef0d834e0290b5",
+      "size": 2469
+    },
+    {
+      "path": "data/phi4mini/events_ics2xml.json",
+      "sha256": "023ef6bab3c848a0eb457b94093009512000e7a4f524c5d89a86a916b4860d0c",
+      "size": 2978
+    },
+    {
+      "path": "data/phi4mini/greedy-prompt_niv.77134.json",
+      "sha256": "6679d7a82dfd982f275409d6d161254a45e0eb065625814aae7dd1f70cd91aeb",
+      "size": 2381
+    },
+    {
+      "path": "data/phi4mini/command_parser_cpp_2k.json",
+      "sha256": "d58181fda89afa774a6a937a240e789da5f2705259e75f4028bf936abc718cc7",
+      "size": 8084
+    },
+    {
+      "path": "data/phi4mini/greedy-prompt_cot.39329.json",
+      "sha256": "00a5ebfcc9da25ede5ff20fe3d9e8fe2d2226bfc6043d6ef3386a17a193f9b94",
+      "size": 759
+    },
+    {
+      "path": "data/phi4mini/13610838973778263699/tokenizer_config.json",
+      "sha256": "9c9b6bc0c94d95f69f826c41069a3e8b387ac3ced89601d201886e99240ac9db",
+      "size": 2932
+    },
+    {
+      "path": "data/phi4mini/13610838973778263699/special_tokens_map.json",
+      "sha256": "aff38493227d813e29fcf8406e8e90062f1f031aa47d589325e9c31d89ac7cc3",
+      "size": 587
+    },
+    {
+      "path": "data/phi4mini/13610838973778263699/tokenizer.zip",
+      "sha256": "f78ff14854194978b550bbd6f4666bc8f6852bea348ff361a39898c98f866784",
+      "size": 3262224
+    },
+    {
+      "path": "data/phi4mini/13610838973778263699/tokenizer.json",
+      "sha256": "382cc235b56c725945e149cc25f191da667c836655efd0857b004320e90e91ea",
+      "size": 15524095
+    },
+    {
+      "path": "data/phi4mini/13610838973778263699/microsoft_Phi-4-mini-instruct-Q4_0.gguf",
+      "sha256": "2124412a2d3410dd05c5d01796457283812210633165a2a86c909f815971518e",
+      "size": 2331442560
+    },
+    {
+      "path": "output/results.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "output/phi4mini_executor.log",
+      "sha256": "b565fbc9b84cd1116b369aca8c9a8fe0d5260e4b6e2a70b72b7903092d1cf69d",
+      "size": 3487
+    },
+    {
+      "path": "temp/MLPerf/Log4CxxConfig.xml",
+      "sha256": "64e9be8c78e6daec3e040cd6fb3a4339a9019d78ff6c176f4c1911d9f6c24275",
+      "size": 4052
+    },
+    {
+      "path": "temp/MLPerf/url_cache.json",
+      "sha256": "690e9f026ebb73419167ce3efbbd271c05eb4803dc2aed53255cd6a0dbc51ee8",
+      "size": 3963
+    },
+    {
+      "path": "temp/MLPerf/DataVerificationSchema.json",
+      "sha256": "488a5052614e17dac56ef09afdf573937c4a82f0eb3b084cbdcbf459bb0f4653",
+      "size": 304
+    },
+    {
+      "path": "temp/MLPerf/OutputResultsSchema.json",
+      "sha256": "b9d57f7569a676a002b1aab2df55c89b2155847dd042edae9ba84bce5b1fd331",
+      "size": 237
+    },
+    {
+      "path": "temp/MLPerf/data_verification.json",
+      "sha256": "2a069a43418ed4aa8bc018f864118c8a6b1f250edb6cbd6cdfa78a4d32423266",
+      "size": 11977
+    },
+    {
+      "path": "temp/MLPerf/ConfigSchema.json",
+      "sha256": "a4750f2ec8866b80f416b440f545a6a8f2217d88f25406e2e511bff3fcc51e60",
+      "size": 16293
+    },
+    {
+      "path": "temp/MLPerf/ep_dependencies_config.json",
+      "sha256": "a6d58d1edaf1d17daec38de11ceebe7939aa41af7d6846fc5a881520df21823a",
+      "size": 1021
+    },
+    {
+      "path": "temp/MLPerf/config_verification.json",
+      "sha256": "5630c867a4898c934a5c88fb4b48238d1d7914e37d6c31105ec7771916c1be0c",
+      "size": 9313
+    },
+    {
+      "path": "temp/MLPerf/LLMInputSchema.json",
+      "sha256": "22ccb45dabadf26ae1712282837f69ae7a4d6454728f04fb636096cc722c0616",
+      "size": 2663
+    },
+    {
+      "path": "temp/MLPerf/EPDependenciesConfigSchema.json",
+      "sha256": "92d27c0b65b2318e7aa4039502ba8802be6b6d3f1ea0ddf112dca787d05d573f",
+      "size": 1995
+    },
+    {
+      "path": "temp/MLPerf/IHV/GGML/libIHV_GGML_EPs.dylib",
+      "sha256": "361a25e8e0813af8f34d369da2305a7385cfde7f1ebe0e0714c7be2d53b3d207",
+      "size": 160160
+    },
+    {
+      "path": "temp/MLPerf/IHV/GGML/libllama_cpp_Metal.dylib",
+      "sha256": "241f4c621431ebf841585ce527532315841a724bd263e3fbff4b6f238cc16c1d",
+      "size": 5312272
+    }
+  ],
+  "asset_name": "mlperf-client-2.0.0-c8d2dc0-macos.zip",
+  "asset_sha256": "75651ee2f516d543fbafe27cef284c739d2eb563cc1f1fdcadfa2445787ad8c6",
+  "asset_size": 12751530,
+  "base_prompt_count": 10,
+  "claim_ceiling": "PROVIDER_HOSTED_MLPERF_CLIENT_2_0_PHI4MINI_STANDARD_SELF_RUN_RESOURCE_VALIDATION_ONLY__PARENT_A9_FAIL_PRESERVED__UNVERIFIED__NO_UOS_CANDIDATE_SUPERIORITY__NO_THREE_MATERIAL_STACKS__NO_HIDDEN_EVALUATOR_TASKS__NO_INDEPENDENT_RAW_CUSTODY__NO_UNAFFILIATED_SCORING_ADJUDICATION__NO_PRODUCTION_SUPERIORITY__NO_FULL_UNIVERSALITY",
+  "command": [
+    "/tmp/exp26c_a9_r1/extracted/mlperf-mac",
+    "-c",
+    "/tmp/exp26c_a9_r1/phi4mini_metal.json",
+    "--temp-dir",
+    "/tmp/exp26c_a9_r1/temp",
+    "--data-dir",
+    "/tmp/exp26c_a9_r1/data",
+    "--output-dir",
+    "/tmp/exp26c_a9_r1/output",
+    "--prompts",
+    "base",
+    "--pause",
+    "false"
+  ],
+  "config_iterations": 3,
+  "config_sha256": "3969fe37510f95f19275d4a9f45879fbc2909e3472ec239fbeec9b167206e545",
+  "config_url": "https://raw.githubusercontent.com/mlcommons/mlperf_client/main/data/configs/vendors_default/llm/phi4mini/macOS_llamacpp-Metal_GPU.json",
+  "evidence_class": "L1_EXTERNAL_STANDARD_SELF_RUN_UNVERIFIED",
+  "executable_sha256": "fced8c4ccf493bb0707cc94ced09fe71b1c710e3e9edbf6c85bbc013d1596be4",
+  "executable_size": 48431296,
+  "execution_provider": {
+    "Config": {
+      "backend": "Metal",
+      "device_type": "GPU",
+      "gpu_layers": 999
+    },
+    "Name": "llama-cpp"
+  },
+  "exp26c_scientific_id_assigned": false,
+  "github_sha": "4299715e0aadbfc1caf789885a0b95438edde9cc",
+  "independent_custody": false,
+  "independent_scoring_adjudication": false,
+  "mlcommons_reviewed_verified": false,
+  "model_files": [
+    {
+      "path": "data/phi4mini/13610838973778263699/microsoft_Phi-4-mini-instruct-Q4_0.gguf",
+      "sha256": "2124412a2d3410dd05c5d01796457283812210633165a2a86c909f815971518e",
+      "size": 2331442560
+    }
+  ],
+  "model_url": "https://client.mlcommons-storage.org/deps/2.0/scenario_files/models/phi4/mini-instruct/GGML/microsoft_Phi-4-mini-instruct-Q4_0.gguf",
+  "output_files": [
+    {
+      "path": "output/results.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "output/phi4mini_executor.log",
+      "sha256": "b565fbc9b84cd1116b369aca8c9a8fe0d5260e4b6e2a70b72b7903092d1cf69d",
+      "size": 3487
+    }
+  ],
+  "parent_id": "LT-UOS-EIDOLEN-EXP26C-MLPERF-PHI4MINI-METAL-BASE-WORKLOAD-A9-20260818",
+  "parent_terminal": "FAIL_EXP26C_A9_PHI4MINI_METAL_BASE_WORKLOAD__OFFICIAL_STANDARD_SELF_RUN_NONZERO_EXIT__FIRST_TERMINAL_PRESERVED__NO_SAME_ID_RETRY__EXTERNAL_0_OF_12",
+  "partial_stderr": "ggml_metal_device_init: tensor API disabled for pre-M5 and pre-A19 devices\nggml_metal_library_init: using embedded metal library\nggml_metal_library_init: loaded in 10.604 sec\nggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)\nggml_metal_device_init: GPU name:   MTL0 (Apple Paravirtual device)\nggml_metal_device_init: GPU family: MTLGPUFamilyApple5  (1005)\nggml_metal_device_init: GPU family: MTLGPUFamilyCommon3 (3003)\nggml_metal_device_init: simdgroup reduction   = false\nggml_metal_device_init: simdgroup matrix mul. = false\nggml_metal_device_init: has unified memory    = true\nggml_metal_device_init: has bfloat            = false\nggml_metal_device_init: has tensor            = false\nggml_metal_device_init: use residency sets    = true\nggml_metal_device_init: use shared buffers    = true\nggml_metal_device_init: recommendedMaxWorkingSetSize  =  5010.80 MB\nggml_metal_device_init: tensor API disabled for pre-M5 and pre-A19 devices\nggml_metal_library_init: using embedded metal library\nggml_metal_library_init: loaded in 0.026 sec\nggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)\nggml_metal_device_init: GPU name:   MTL0 (Apple Paravirtual device)\nggml_metal_device_init: GPU family: MTLGPUFamilyApple5  (1005)\nggml_metal_device_init: GPU family: MTLGPUFamilyCommon3 (3003)\nggml_metal_device_init: simdgroup reduction   = false\nggml_metal_device_init: simdgroup matrix mul. = false\nggml_metal_device_init: has unified memory    = true\nggml_metal_device_init: has bfloat            = false\nggml_metal_device_init: has tensor            = false\nggml_metal_device_init: use residency sets    = true\nggml_metal_device_init: use shared buffers    = true\nggml_metal_device_init: recommendedMaxWorkingSetSize  =  5010.80 MB\n",
+  "partial_stdout": "The default logger configuration file is used.\nStarting...\nApplication Version: 2.0.0.c8d2dc0 MLCommons Standard Build\nUsing scenarios from /tmp/exp26c_a9_r1/phi4mini_metal.json\nConfiguring scenarios...\n\nConfiguration tested by MLCommons\nStarting to run scenario phi4mini, model Phi 4 Mini Instruct\n\nChecking disk space before downloading...\nDisk space check passed.\n\n\nDownloading necessary files...\n\nDownload microsoft_Phi-4-mini-instruct-Q4_0.gguf (Task 1/13) finished in 00:00:27.364 seconds\n\nOverall Progress: [1 files downloaded, 0 skipped, 0 failed]\n\nDownload tokenizer.zip (Task 2/13) finished in 00:00:00.936 seconds\n\nOverall Progress: [2 files downloaded, 0 skipped, 0 failed]\n\nDownload greedy-prompt_cot.39329.json (Task 3/13) finished in 00:00:00.648 seconds\n\nOverall Progress: [3 files downloaded, 0 skipped, 0 failed]\n\nDownload greedy-prompt_t0.677207.json (Task 4/13) finished in 00:00:00.513 seconds\n\nOverall Progress: [4 files downloaded, 0 skipped, 0 failed]\n\nDownload greedy-prompt_niv.123362.json (Task 5/13) finished in 00:00:00.441 seconds\n\nOverall Progress: [5 files downloaded, 0 skipped, 0 failed]\n\nDownload greedy-prompt_niv.77134.json (Task 6/13) finished in 00:00:00.449 seconds\n\nOverall Progress: [6 files downloaded, 0 skipped, 0 failed]\n\nDownload data_csv2json.json (Task 7/13) finished in 00:00:00.514 seconds\n\nOverall Progress: [7 files downloaded, 0 skipped, 0 failed]\n\nDownload events_ics2xml.json (Task 8/13) finished in 00:00:00.558 seconds\n\nOverall Progress: [8 files downloaded, 0 skipped, 0 failed]\n\nDownload command_parser_cpp_2k.json (Task 9/13) finished in 00:00:00.555 seconds\n\nOverall Progress: [9 files downloaded, 0 skipped, 0 failed]\n\nDownload performance_counter_group_cpp_2k.json (Task 10/13) finished in 00:00:00.462 seconds\n\nOverall Progress: [10 files downloaded, 0 skipped, 0 failed]\n\nDownload booksum_4k.json (Task 11/13) finished in 00:00:00.468 seconds\n\nOverall Progress: [11 files downloaded, 0 skipped, 0 failed]\n\nDownload downloader_cpp_4k.json (Task 12/13) finished in 00:00:00.418 seconds\n\nOverall Progress: [12 files downloaded, 0 skipped, 0 failed]\n\nDownload generation-greedy-results.json (Task 13/13) finished in 00:00:00.291 seconds\n\nOverall Progress: [All files were downloaded successfully]\n\nUnpacking downloaded files...\nPreparing for inferences execution...\n\nVerifying files...\n\nRunning benchmarks for EPs llama-cpp-Metal{\"backend\":\"Metal\",\"device_id\":0,\"device_name\":\"Apple Paravirtual device\",\"device_type\":\"GPU\",\"gpu_layers\":999} on model \"Phi-4-mini-instruct-Q4_0\" (https://client.mlcommons-storage.org/deps/2.0/scenario_files/models/phi4/mini-instruct/GGML/microsoft_Phi-4-mini-instruct-Q4_0.gguf -> /tmp/exp26c_a9_r1/data/phi4mini/13610838973778263699/microsoft_Phi-4-mini-instruct-Q4_0.gguf), added 1 task(s)\n\n\nPreparing to run the benchmark for the EP llama-cpp{\"backend\":\"Metal\",\"device_id\":0,\"device_name\":\"Apple Paravirtual device\",\"device_type\":\"GPU\",\"gpu_layers\":999}\npower_begin - start phi4mini phi_4_mini_instruct llama-cpp {\"backend\":\"Metal\",\"device_id\":0,\"device_name\":\"Apple Paravirtual device\",\"device_type\":\"GPU\",\"gpu_layers\":999}\n",
+  "record_type": "PROVIDER_HOSTED_RECOGNIZED_EXTERNAL_STANDARD_SELF_RUN_RESOURCE_VALIDATION_ONLY",
+  "release_tag": "v2.0",
+  "repair_delta": "REPLACE_INVALID_RESULTS_DIR_WITH_OFFICIAL_OUTPUT_DIR_AND_SET_PAUSE_FALSE",
+  "results_verification_url": "https://client.mlcommons-storage.org/deps/2.0/scenario_files/llm/generation-greedy-results.json",
+  "scientific_uos_candidate_execution": false,
+  "stable_id": "LT-UOS-EIDOLEN-EXP26C-MLPERF-PHI4MINI-METAL-BASE-WORKLOAD-A9-R1-20260818",
+  "strict_external_role_coverage": "0/12",
+  "terminal": "TIMEOUT_EXP26C_A9_R1_PHI4MINI_METAL_BASE_WORKLOAD__PARENT_FAIL_PRESERVED__OFFICIAL_STANDARD_SELF_RUN_EXCEEDED_FROZEN_3300S_BUDGET__FIRST_TERMINAL_PRESERVED__NO_SAME_ID_RETRY__EXTERNAL_0_OF_12",
+  "timeout_seconds": 3300,
+  "timestamp_utc": "2026-08-19T01:37:33.793240+00:00",
+  "tokenizer_url": "https://client.mlcommons-storage.org/deps/2.0/scenario_files/models/phi4/mini-instruct/GGML/tokenizer.zip",
+  "unaffiliated_execution": false
+}

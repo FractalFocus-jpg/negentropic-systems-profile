@@ -1,0 +1,17 @@
+Rights and disclosure notice — public research overview
+
+This repository contains only a non-confidential profile and its presentation files.
+It does not contain or release proprietary research source code, private datasets,
+unpublished technical mechanisms, or development-repository history.
+
+Rights in applicable content are reserved by their respective rights holders.
+No new license to proprietary research, software, patents, or other background
+intellectual property is offered by this overview. This notice does not change
+any existing license, GitHub platform permission, or legally permitted use.
+It is not a nondisclosure agreement or a determination of legal ownership.
+
+A technical exchange, source access, evaluation, or collaboration is separately
+scoped. Do not send confidential material before appropriate arrangements are
+agreed.
+
+Contact: Alexander Liantonio — alexliantonio43@gmail.com

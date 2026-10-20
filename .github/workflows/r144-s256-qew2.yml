@@ -1,0 +1,84 @@
+name: R144-S256 QEW-2 Cross-Provider Rehearsal
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/r144_s256/**'
+      - '.github/workflows/r144-s256-qew2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  provider:
+    name: Provider ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check cryptography
+      - name: Unpack frozen experiment bundle
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          p = Path('experiments/r144_s256/r144_s256_github_bundle.zip')
+          with zipfile.ZipFile(p) as z:
+              z.extractall('experiments/r144_s256')
+          PY
+      - name: Run provider-owned seed, interruption, replay, and verification
+        env:
+          QEW_OUTDIR: provider_output
+        run: python experiments/r144_s256/src/provider_runner.py
+      - name: Upload provider result
+        uses: actions/upload-artifact@v4
+        with:
+          name: s256-provider-${{ matrix.os }}
+          path: provider_output
+          if-no-files-found: error
+          retention-days: 30
+
+  aggregate:
+    name: Aggregate provider evidence
+    needs: provider
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unpack frozen experiment bundle
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          p = Path('experiments/r144_s256/r144_s256_github_bundle.zip')
+          with zipfile.ZipFile(p) as z:
+              z.extractall('experiments/r144_s256')
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: s256-provider-*
+          path: provider_artifacts
+      - name: Aggregate frozen provider results
+        run: |
+          mkdir -p aggregate
+          python experiments/r144_s256/src/aggregate_results.py \
+            --root provider_artifacts \
+            --out aggregate/AGGREGATE_RESULT.json
+      - name: Upload aggregate result
+        uses: actions/upload-artifact@v4
+        with:
+          name: s256-aggregate-result
+          path: aggregate
+          if-no-files-found: error
+          retention-days: 30

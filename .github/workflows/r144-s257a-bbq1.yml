@@ -1,0 +1,136 @@
+name: R144-S257A Public-Beacon Blind Quorum Rehearsal
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/r144_s257a/**'
+      - '.github/workflows/r144-s257a-bbq1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  beacon:
+    name: Acquire future verified public beacon
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Unpack frozen R144-S257A bundle
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          p = Path('experiments/r144_s257a/r144_s257a_github_bundle.zip')
+          with zipfile.ZipFile(p) as z:
+              z.extractall('experiments/r144_s257a')
+          PY
+      - name: Install pinned drand verifier client
+        run: npm install --no-save drand-client@1.4.2 isomorphic-fetch@3.0.0 abort-controller@3.0.0
+      - name: Wait for and verify future drand beacon
+        env:
+          BEACON_WAIT_SECONDS: '35'
+        run: node experiments/r144_s257a/src/beacon_fetch.mjs --out beacon/BEACON.json
+      - name: Upload verified beacon record
+        uses: actions/upload-artifact@v4
+        with:
+          name: s257a-verified-beacon
+          path: beacon
+          if-no-files-found: error
+          retention-days: 30
+
+  provider:
+    name: Provider ${{ matrix.os }}
+    needs: beacon
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned Python dependency
+        run: python -m pip install --disable-pip-version-check cryptography==46.0.3
+      - name: Unpack frozen experiment bundles
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          for rel in [
+              'experiments/r144_s257a/r144_s257a_github_bundle.zip',
+              'experiments/r144_s256/r144_s256_github_bundle.zip',
+          ]:
+              p = Path(rel)
+              with zipfile.ZipFile(p) as z:
+                  z.extractall(p.parent)
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          name: s257a-verified-beacon
+          path: beacon
+      - name: Run beacon-seeded interruption, replay, and verification
+        env:
+          QEW_OUTDIR: provider_output
+          BEACON_PATH: beacon/BEACON.json
+          QEW_EXPERIMENT_PATH: experiments/r144_s256/src/qew2_experiment.py
+          QEW_VERIFIER_PATH: experiments/r144_s256/src/independent_verifier.py
+        run: python experiments/r144_s257a/src/provider_runner.py
+      - name: Upload provider result
+        uses: actions/upload-artifact@v4
+        with:
+          name: s257a-provider-${{ matrix.os }}
+          path: provider_output
+          if-no-files-found: error
+          retention-days: 30
+
+  aggregate:
+    name: Aggregate blind-beacon evidence
+    needs: provider
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unpack frozen R144-S257A bundle
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          p = Path('experiments/r144_s257a/r144_s257a_github_bundle.zip')
+          with zipfile.ZipFile(p) as z:
+              z.extractall('experiments/r144_s257a')
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: s257a-provider-*
+          path: provider_artifacts
+      - name: Aggregate provider results
+        run: |
+          mkdir -p aggregate
+          python experiments/r144_s257a/src/aggregate_results.py --root provider_artifacts --out aggregate/PROVIDER_AGGREGATE.json
+      - name: Run frozen seed-discretion study
+        run: python experiments/r144_s257a/src/selection_bias_study.py --out aggregate/SELECTION_BIAS_STUDY.json --n 100000
+      - name: Run frozen quorum threshold model
+        run: python experiments/r144_s257a/src/quorum_threshold_model.py --out aggregate/QUORUM_THRESHOLD_MODEL.json --max-n 12
+      - name: Finalize frozen aggregate
+        run: |
+          python experiments/r144_s257a/src/finalize_aggregate.py \
+            --providers aggregate/PROVIDER_AGGREGATE.json \
+            --selection aggregate/SELECTION_BIAS_STUDY.json \
+            --quorum aggregate/QUORUM_THRESHOLD_MODEL.json \
+            --out aggregate/FINAL_SUMMARY.json
+      - name: Upload aggregate result
+        uses: actions/upload-artifact@v4
+        with:
+          name: s257a-aggregate-result
+          path: aggregate
+          if-no-files-found: error
+          retention-days: 30

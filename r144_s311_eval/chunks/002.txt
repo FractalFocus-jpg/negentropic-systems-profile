@@ -1,0 +1,119 @@
+rray.from({length:K},()=>[]);
+  for(const x of ref) by[x.pred].push(x.raw);
+  by.forEach(a=>a.sort((x,y)=>x-y));
+  return {all,by};
+}
+function addRanks(rows,bank){ return rows.map(x=>({...x,rank:rankScore(x.raw,bank.by[x.pred].length?bank.by[x.pred]:bank.all)})); }
+
+const BASE_QUALITY={
+  logistic:{breast_cancer:0.955,wine:0.905,digits:0.855},
+  mlp_ensemble:{breast_cancer:0.970,wine:0.930,digits:0.895}
+};
+const REGIME_PENALTY={clean:0,noise_mild:0.02,noise_strong:0.07,mask_15:0.03,mask_35:0.08,scale_drift:0.055,prior_shift:0.04,tail_subgroup:0.06,compound_shift:0.10};
+const OVERCONF={clean:0.025,noise_mild:0.035,noise_strong:0.065,mask_15:0.04,mask_35:0.075,scale_drift:0.06,prior_shift:0.05,tail_subgroup:0.07,compound_shift:0.10};
+
+function unitParameters(secret,family,unit,dataset,regime,scale,K){
+  const rng=new RNG(seed32(`${secret}|param|${family}|${unit}|${dataset}|${regime}|${scale}`));
+  const priors=normalize(Array.from({length:K},()=>0.65+rng.random()*0.70));
+  const classMods=Array.from({length:K},()=>clamp(rng.normal()*0.016,-0.035,0.035));
+  const weather=clamp(rng.normal()*0.012,-0.025,0.025);
+  const base=BASE_QUALITY[family][dataset]-REGIME_PENALTY[regime]+weather+(scale===2400?0.003:0);
+  return {priors,classMods,base,overconf:clamp(OVERCONF[regime]+rng.normal()*0.008,0.01,0.14)};
+}
+function generateRows(secret,family,unit,dataset,regime,scale,K,split,n){
+  const params=unitParameters(secret,family,unit,dataset,regime,scale,K);
+  const rng=new RNG(seed32(`${secret}|rows|${family}|${unit}|${dataset}|${regime}|${scale}|${split}`));
+  const rows=[];
+  for(let i=0;i<n;i++){
+    const y=sampleCategorical(rng,params.priors);
+    const q=clamp(params.base+params.classMods[y],0.62,0.985);
+    const correct=rng.random()<q;
+    let pred=y;
+    if(!correct){ let j=rng.int(K-1); pred=j>=y?j+1:j; }
+    let raw;
+    if(correct){
+      const familyBoost=family==="mlp_ensemble"?0.035:0;
+      const regimeDrag=REGIME_PENALTY[regime]*0.45;
+      const center=clamp(0.80+familyBoost-regimeDrag+0.035*rng.normal(),0.53,0.97);
+      raw=clamp(center+(1-center)*(1-Math.pow(rng.random(),0.45)),0.01,0.999);
+    }else{
+      if(rng.random()<params.overconf){ raw=clamp(0.70+0.29*Math.pow(rng.random(),0.35),0.01,0.999); }
+      else raw=clamp(0.12+0.66*Math.pow(rng.random(),1.65),0.01,0.98);
+    }
+    const invalid=rng.random()<(0.006+REGIME_PENALTY[regime]*0.08);
+    rows.push({y,pred,raw,hard:!invalid});
+  }
+  return rows;
+}
+
+function binomCDF(k,n,p){
+  if(n<=0)return 1;
+  if(k<0)return 0;
+  if(k>=n)return 1;
+  // For our lower-tail safety test, an empirical rate at or above the null
+  // boundary cannot yield a small p-value. Return a conservative 1 early.
+  if(k/n>=p)return 1;
+  let term=Math.pow(1-p,n), acc=term;
+  const ratio=p/(1-p);
+  for(let i=1;i<=k;i++){ term*=((n-i+1)/i)*ratio; acc+=term; if(acc>=1)return 1; }
+  return Math.min(1,acc);
+}
+function riskPValue(k,n,alpha){ return n<=0?1:binomCDF(k,n,alpha); }
+function errorsFor(rows,eligible,K){
+  let n=0,k=0; const cn=Array(K).fill(0), ck=Array(K).fill(0);
+  for(let i=0;i<rows.length;i++) if(eligible[i]){ const r=rows[i]; n++; cn[r.y]++; if(r.pred!==r.y){k++;ck[r.y]++;} }
+  return {n,k,cn,ck};
+}
+function thresholdEligible(rows,thresholds){ return rows.map(r=>r.hard && r.rank>=thresholds[r.pred]); }
+function passJointRisk(pooled,locals,K,family,alpha=DELTA){
+  const limits=CERT_LIMITS[family];
+  // Intersection-union release: the global unsafe state is a union of component
+  // unsafe nulls, while release requires rejection of every component null.
+  // Therefore each component may be tested at alpha without a Bonferroni sum
+  // across conjunctive constraints. Multiplicity across policy candidates is
+  // controlled by the fixed-sequence nested search below.
+  if(pooled.n<MIN_AGG_WITNESS || riskPValue(pooled.k,pooled.n,limits.aggregate)>alpha) return false;
+  for(let c=0;c<K;c++) if(pooled.cn[c]<MIN_CLASS_WITNESS || riskPValue(pooled.ck[c],pooled.cn[c],limits.class_local)>alpha) return false;
+  for(const loc of locals) if(loc.n<MIN_AGG_WITNESS || riskPValue(loc.k,loc.n,limits.aggregate)>alpha) return false;
+  return true;
+}
+function discoveryBase(rows,K,family){
+  const classLimit=DISC_LIMITS[family].class_local;
+  const out=Array(K).fill(0.99);
+  for(let c=0;c<K;c++){
+    for(const t of THRESHOLD_GRID){
+      let n=0,k=0;
+      for(const r of rows) if(r.hard&&r.pred===c&&r.rank>=t){n++;if(r.pred!==r.y)k++;}
+      if(n>=30 && k/n<=classLimit){out[c]=t;break;}
+    }
+  }
+  return out;
+}
+function empiricalPolicyScore(rowsByScale,thresholdsByScale,K,family){
+  const limits=DISC_LIMITS[family];
+  const pooledRows=[],pooledElig=[]; const locals=[]; let utility=0;
+  for(const scale of SCALES){
+    const rows=rowsByScale[scale];
+    const e=thresholdEligible(rows,thresholdsByScale[scale]);
+    pooledRows.push(...rows); pooledElig.push(...e);
+    const loc=errorsFor(rows,e,K); locals.push(loc);
+    let correct=0,wrong=0,heldHard=0;
+    for(let i=0;i<rows.length;i++){
+      if(e[i]){ if(rows[i].pred===rows[i].y)correct++; else wrong++; }
+      else if(rows[i].hard)heldHard++;
+    }
+    const reviewed=Math.min(Math.floor(REVIEW_FRACTION*rows.length),heldHard);
+    utility+=1000*(correct-ERROR_PENALTY*wrong+(1-REVIEW_COST)*reviewed)/rows.length;
+  }
+  const pooled=errorsFor(pooledRows,pooledElig,K);
+  const classRates=pooled.cn.map((n,c)=>n?pooled.ck[c]/n:1);
+  const safe=pooled.n>=MIN_AGG_WITNESS && pooled.k/pooled.n<=limits.aggregate &&
+    pooled.cn.every(n=>n>=MIN_CLASS_WITNESS) && classRates.every(x=>x<=limits.class_local) &&
+    locals.every(x=>x.n>=MIN_AGG_WITNESS && x.k/x.n<=limits.aggregate);
+  return {safe,utility,pooled,locals,classRates};
+}
+function certifyOnePolicy(certByScale,thresholdsByScale,K,family,alpha=DELTA){
+  const pooledRows=[],pooledElig=[]; const locals=[];
+  for(const scale of SCALES){
+    const e=thresholdEligible(certByScale[scale],thresholdsByScale[scale]);
+    pooledRows.push(...certByScale[scale]); pooledElig.push(...e);

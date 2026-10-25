@@ -1,0 +1,78 @@
+
+    locals.push(errorsFor(certByScale[scale],e,K));
+  }
+  const pooled=errorsFor(pooledRows,pooledElig,K);
+  return {safe:passJointRisk(pooled,locals,K,family,alpha),pooled,locals};
+}
+function selectGlobalDevelopmentProposal(discoveryByScale,K,family){
+  const proposals=[];
+  for(const t of THRESHOLD_GRID){
+    const thresholds=Object.fromEntries(SCALES.map(scale=>[scale,Array(K).fill(t)]));
+    const dev=empiricalPolicyScore(discoveryByScale,thresholds,K,family);
+    proposals.push({t,thresholds,dev});
+  }
+  const admissible=proposals.filter(x=>x.dev.safe).sort((a,b)=>b.dev.utility-a.dev.utility || a.t-b.t);
+  return {selected:admissible[0]||null,proposals};
+}
+function calibrateCandidate(discoveryByScale,certByScale,auditByScale,K,family,dataset,regime){
+  const bases={}; for(const scale of SCALES) bases[scale]=discoveryBase(discoveryByScale[scale],K,family);
+  const actionProposals=[];
+  for(const off of OFFSETS){
+    const thresholds={};
+    for(const scale of SCALES) thresholds[scale]=bases[scale].map(x=>clamp(Number((x+off).toFixed(2)),0.01,0.99));
+    const dev=empiricalPolicyScore(discoveryByScale,thresholds,K,family);
+    actionProposals.push({kind:"action_conditional",off,thresholds,dev});
+  }
+  const actionSelected=actionProposals.filter(x=>x.dev.safe).sort((a,b)=>b.dev.utility-a.dev.utility || a.off-b.off)[0]||null;
+  const globalDevelopment=selectGlobalDevelopmentProposal(discoveryByScale,K,family);
+  const globalSelected=globalDevelopment.selected?{kind:"global_fallback",off:null,threshold:globalDevelopment.selected.t,thresholds:globalDevelopment.selected.thresholds,dev:globalDevelopment.selected.dev}:null;
+  const fixedThresholds=Object.fromEntries(SCALES.map(scale=>[scale,Array(K).fill(0.50)]));
+  const fixedDev=empiricalPolicyScore(discoveryByScale,fixedThresholds,K,family);
+  const fixedSelected={kind:"fixed_core_fallback",off:null,threshold:0.50,thresholds:fixedThresholds,dev:fixedDev};
+  const atlasThresholds=Object.fromEntries(SCALES.map(scale=>[scale,s308Thresholds(family,dataset,regime,scale,K)]));
+  const atlasDev=empiricalPolicyScore(discoveryByScale,atlasThresholds,K,family);
+  const atlasSelected={kind:"s308_atlas_fallback",off:null,threshold:null,thresholds:atlasThresholds,dev:atlasDev};
+  const certified=[]; const portfolioDiagnostics=[];
+  // Four predeclared candidate families; Bonferroni only across this portfolio.
+  for(const selected of [actionSelected,globalSelected,fixedSelected,atlasSelected]) if(selected){
+    const cert=certifyOnePolicy(certByScale,selected.thresholds,K,family,DELTA/4);
+    if(!cert.safe){ portfolioDiagnostics.push({kind:selected.kind,certified:false,audit_pass:false,development_utility:selected.dev.utility}); continue; }
+    const audit=auditPolicy(auditByScale,selected.thresholds,K,family);
+    portfolioDiagnostics.push({kind:selected.kind,certified:true,audit_pass:audit.pass,development_utility:selected.dev.utility,audit_aggregate:audit.pooled.n?audit.pooled.k/audit.pooled.n:null,audit_worst_class:Math.max(...audit.pooled.cn.map((n,c)=>n?audit.pooled.ck[c]/n:1))});
+    if(!audit.pass) continue;
+    const limits=AUDIT_LIMITS[family];
+    const aggRate=audit.pooled.n?audit.pooled.k/audit.pooled.n:1;
+    const classRates=audit.pooled.cn.map((n,c)=>n?audit.pooled.ck[c]/n:1);
+    const maxClass=Math.max(...classRates);
+    const riskScore=Math.max(aggRate/limits.aggregate,maxClass/limits.class_local);
+    certified.push({...selected,cert,audit,aggRate,maxClass,riskScore});
+  }
+  if(!certified.length) return {certified:false,thresholds:Object.fromEntries(SCALES.map(s=>[s,Array(K).fill(1.0)])),offset:null,threshold:null,selected_kind:null,base:bases,audit:{pass:false,reason:"no_portfolio_member_passed"},portfolio_diagnostics:portfolioDiagnostics};
+  const maxDev=Math.max(...certified.map(x=>x.dev.utility));
+  const nearOptimal=certified.filter(x=>x.dev.utility>=maxDev-100.0);
+  nearOptimal.sort((a,b)=>a.riskScore-b.riskScore || b.dev.utility-a.dev.utility || (a.kind<b.kind?-1:1));
+  const winner=nearOptimal[0];
+  return {certified:true,thresholds:winner.thresholds,offset:winner.off??null,threshold:winner.threshold??null,selected_kind:winner.kind,base:bases,development_score:winner.dev.utility,certification:winner.cert,audit:winner.audit,portfolio_diagnostics:portfolioDiagnostics,portfolio:[...certified].map(x=>({kind:x.kind,development_utility:x.dev.utility,audit_risk_score:x.riskScore,audit_aggregate:x.aggRate,audit_worst_class:x.maxClass}))};
+}
+function calibrateGlobal(discoveryByScale,certByScale,K,family){
+  const dev=selectGlobalDevelopmentProposal(discoveryByScale,K,family);
+  if(!dev.selected) return {certified:false,thresholds:Object.fromEntries(SCALES.map(s=>[s,Array(K).fill(1.0)])),threshold:null};
+  const cert=certifyOnePolicy(certByScale,dev.selected.thresholds,K,family,DELTA);
+  return {certified:cert.safe,thresholds:cert.safe?dev.selected.thresholds:Object.fromEntries(SCALES.map(s=>[s,Array(K).fill(1.0)])),threshold:dev.selected.t,development_score:dev.selected.dev.utility,certification:cert};
+}
+function auditPolicy(auditByScale,thresholdsByScale,K,family){
+  const limits=AUDIT_LIMITS[family];
+  const pooledRows=[],pooledElig=[]; const locals=[];
+  for(const scale of SCALES){
+    const e=thresholdEligible(auditByScale[scale],thresholdsByScale[scale]);
+    pooledRows.push(...auditByScale[scale]); pooledElig.push(...e);
+    locals.push(errorsFor(auditByScale[scale],e,K));
+  }
+  const pooled=errorsFor(pooledRows,pooledElig,K);
+  const aggregateOk=pooled.n>=MIN_AUDIT_AGG && pooled.k/pooled.n<=limits.aggregate;
+  const classOk=pooled.cn.every((n,c)=>n>=MIN_AUDIT_CLASS && pooled.ck[c]/n<=limits.class_local);
+  const localOk=locals.every(x=>x.n>=MIN_AUDIT_AGG && x.k/x.n<=limits.aggregate);
+  return {pass:aggregateOk&&classOk&&localOk,aggregate_ok:aggregateOk,class_ok:classOk,local_ok:localOk,pooled,locals};
+}
+function applyAuditVeto(policy,auditByScale,K,family){
+  if(!policy.certified) return {...policy,audit:{pass:false,reason:

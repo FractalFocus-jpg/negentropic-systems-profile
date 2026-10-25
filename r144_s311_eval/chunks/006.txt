@@ -1,0 +1,7 @@
+ON.stringify({family_summary:r.family_summary,promotion:r.promotion,disposition:r.disposition,elapsed_ms:r.elapsed_ms,result_sha256:r.result_sha256,runs:r.runs.map(x=>({family:x.family,unit:x.unit,complete:x.reliability_complete,frozen_comparator_advantage:x.frozen_comparator_advantage,conventional_comparator_advantage:x.conventional_comparator_advantage,candidate:x.qualification.candidate,comparator:x.comparator}))},null,2));
+}else{
+  const port=Number(process.env.PORT||3000);
+  const respond=async(req)=>{ try{ const r=await handle(req.url); return new Response(JSON.stringify(r.body),{status:r.status,headers:{"content-type":"application/json"}}); }catch(e){ return new Response(JSON.stringify({error:String(e),stack:e?.stack}),{status:500,headers:{"content-type":"application/json"}}); } };
+  if(typeof Bun!=="undefined") Bun.serve({port,fetch:respond});
+  else http.createServer(async(req,res)=>{const r=await handle(req.url);res.writeHead(r.status,{"content-type":"application/json"});res.end(JSON.stringify(r.body));}).listen(port);
+}

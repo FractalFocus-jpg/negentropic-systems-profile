@@ -1,0 +1,57 @@
+comparatorStrict[m].gains>comparatorStrict[m].regressions);
+  const conventionalComparatorAdvantage=comparatorStrict.global_ltt.total_utility_delta>0&&comparatorStrict.global_ltt.gains>comparatorStrict.global_ltt.regressions;
+  return {family,unit,qualification:q,comparator:comparatorStrict,reliability_complete:!!cand.complete,frozen_comparator_advantage:frozenComparatorAdvantage,conventional_comparator_advantage:conventionalComparatorAdvantage,external_mechanism_complete:!!cand.complete,inactive_cells:cellsByMethod.candidate.filter(c=>c.metrics.coverage<0.01).map(c=>({dataset:c.dataset,regime:c.regime,scale:c.scale,metrics:c.metrics,policy_meta:c.policy_meta})),failure_cells:cellsByMethod.candidate.filter(c=>c.metrics.harm>TARGET_AGG||c.metrics.worst_class_harm>TARGET_CLASS||c.metrics.useful<0.10||c.metrics.utility_per_1000<=0).map(c=>({dataset:c.dataset,regime:c.regime,scale:c.scale,metrics:c.metrics,policy_meta:c.policy_meta}))};
+}
+function lowerBoundAllPass(n,alpha=0.05){ return Math.pow(alpha,1/n); }
+async function evaluate(secret){
+  const runs=[];
+  const started=Date.now();
+  const isDev=process.argv.some(x=>x.startsWith("--selftest"));
+  const devList=(process.env.DEV_UNIT_LIST||"").split(",").map(x=>Number(x.trim())).filter(Number.isFinite);
+  const units=isDev?(devList.length?devList:Array.from({length:Number(process.env.DEV_UNITS||6)},(_,i)=>i+1)):Array.from({length:HIDDEN_UNITS_PER_FAMILY},(_,i)=>i+1);
+  const unitsPerFamily=units.length;
+  for(const family of FAMILIES) for(const unit of units) runs.push(await evaluateRun(secret,family,unit));
+  const familySummary={};
+  for(const family of FAMILIES){
+    const rs=runs.filter(r=>r.family===family);
+    const passes=rs.filter(r=>r.reliability_complete).length;
+    const frozenAdv=rs.filter(r=>r.frozen_comparator_advantage).length;
+    const conventionalAdv=rs.filter(r=>r.conventional_comparator_advantage).length;
+    familySummary[family]={passes,total:rs.length,lower_95_one_sided:passes===rs.length?lowerBoundAllPass(rs.length):null,promotion:passes===rs.length&&lowerBoundAllPass(rs.length)>0.80,frozen_comparator_advantage_runs:frozenAdv,conventional_comparator_advantage_runs:conventionalAdv};
+  }
+  const promotion=Object.values(familySummary).every(x=>x.promotion);
+  const comparativePromotion=Object.values(familySummary).every(x=>x.frozen_comparator_advantage_runs===x.total&&x.conventional_comparator_advantage_runs===x.total);
+  const result={stable_id:STABLE_ID,title:TITLE,mechanism:"action-conditional Learn-Then-Test / conformal decision calibration with intersection-union release and independent audit veto",external_provenance:["Angelopoulos et al., Learn then Test (2021/2026 revision)","Lekeufack et al., Conformal Decision Theory (2023)","Zhu et al., Action-Conditional Conformal Risk-Averse Decision Making (ICML 2026)"],hidden_bank:{units_per_family:unitsPerFamily,families:FAMILIES,seed_control:"Railway runtime-generated 256-bit secret",secret_disclosed_after_close:secret},family_summary:familySummary,promotion,comparative_promotion:comparativePromotion,disposition:promotion?"INDEPENDENT_HOST_SYNTHETIC_RELIABILITY_PASS_PROCEDURAL_INDEPENDENCE_ONLY":"INDEPENDENT_HOST_SYNTHETIC_RELIABILITY_FAIL",runs,elapsed_ms:Date.now()-started,limitations:["Same research operator specified proposer and evaluator source; this is procedural and host separation, not unaffiliated institutional independence.","Synthetic score-generation workload, not real-world domain validation.","Reliability promotion and comparative superiority are reported separately.","No cybersecurity or quantum-cryptographic superiority inference."]};
+  result.result_sha256=sha256(stableStringify({...result,result_sha256:undefined}));
+  return result;
+}
+
+const sourcePath=fileURLToPath(import.meta.url);
+const sourceHash=sha256(readFileSync(sourcePath));
+const protocolHash=sha256(stableStringify({STABLE_ID,DATASETS,REGIMES,SCALES,FAMILIES,THRESHOLD_GRID,OFFSETS,TARGET_AGG,TARGET_CLASS,CERT_LIMITS,DISC_LIMITS,AUDIT_LIMITS,MIN_AUDIT_AGG,MIN_AUDIT_CLASS,DELTA,REVIEW_FRACTION,HIDDEN_UNITS_PER_FAMILY,atlas_hash:sha256(stableStringify(S308_ATLAS))}));
+const masterSecret=randomBytes(32).toString("hex");
+const commitment=sha256(`${STABLE_ID}|${sourceHash}|${protocolHash}|${masterSecret}`);
+let state={phase:"COMMITTED",result:null,replay:null,commitment,sourceHash,protocolHash,createdAt:new Date().toISOString()};
+
+async function handle(url){
+  const p=new URL(url,"http://localhost").pathname;
+  if(p==="/"||p==="/commit") return {status:200,body:{stable_id:STABLE_ID,title:TITLE,phase:state.phase,commitment,source_sha256:sourceHash,protocol_sha256:protocolHash,created_at:state.createdAt}};
+  if(p==="/run"){
+    if(!state.result){ state.phase="RUNNING"; state.result=await evaluate(masterSecret); state.phase="CLOSED"; }
+    return {status:200,body:{phase:state.phase,commitment,result_sha256:state.result.result_sha256,promotion:state.result.promotion,family_summary:state.result.family_summary,elapsed_ms:state.result.elapsed_ms}};
+  }
+  if(p==="/result") return state.result?{status:200,body:{...state.result,commitment,source_sha256:sourceHash,protocol_sha256:protocolHash}}:{status:409,body:{phase:state.phase,error:"evaluation not closed"}};
+  if(p==="/replay"){
+    if(!state.result)return {status:409,body:{error:"run first"}};
+    const r=await evaluate(masterSecret); state.replay={match:r.result_sha256===state.result.result_sha256,replay_sha256:r.result_sha256,original_sha256:state.result.result_sha256,elapsed_ms:r.elapsed_ms}; return {status:200,body:state.replay};
+  }
+  return {status:404,body:{error:"not found"}};
+}
+
+if(process.argv.includes("--selftest-full")){
+  const secret=process.env.MASTER_SECRET||"development-master-secret-r144-s311a";
+  console.log(JSON.stringify(await evaluate(secret),null,2));
+}else if(process.argv.includes("--selftest")){
+  const secret=process.env.MASTER_SECRET||"development-master-secret-r144-s311a";
+  const r=await evaluate(secret);
+  console.log(JS

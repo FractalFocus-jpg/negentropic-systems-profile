@@ -1,0 +1,85 @@
+"not_certified"}};
+  const audit=auditPolicy(auditByScale,policy.thresholds,K,family);
+  if(audit.pass) return {...policy,audit};
+  return {...policy,certified:false,thresholds:Object.fromEntries(SCALES.map(s=>[s,Array(K).fill(1.0)])),audit};
+}
+function route(rows,thresholds,method,witnessCount){
+  const eligible=method==="review_only"?rows.map(()=>false):thresholdEligible(rows,thresholds);
+  const execute=eligible.slice();
+  const remaining=[]; for(let i=0;i<rows.length;i++) if(rows[i].hard&&!execute[i])remaining.push(i);
+  remaining.sort((a,b)=>rows[b].rank-rows[a].rank||a-b);
+  const review=new Set(remaining.slice(0,Math.floor(REVIEW_FRACTION*rows.length)));
+  let exec=0,wrong=0,correct=0,invalid=0,reviewed=review.size; const cn={},ck={};
+  for(let i=0;i<rows.length;i++) if(execute[i]&&!review.has(i)){
+    const r=rows[i];exec++; if(!r.hard)invalid++; cn[r.y]=(cn[r.y]||0)+1; if(r.pred!==r.y){wrong++;ck[r.y]=(ck[r.y]||0)+1}else correct++;
+  }
+  let worst=0,eligibleClasses=0;
+  for(const [c,n] of Object.entries(cn)) if(n>=50){eligibleClasses++; worst=Math.max(worst,(ck[c]||0)/n);}
+  const utility=correct-ERROR_PENALTY*wrong+(1-REVIEW_COST)*reviewed-WITNESS_COST*witnessCount;
+  return {n:rows.length,executed:exec,wrong,correct,reviewed,invalid,harm:exec?wrong/exec:0,coverage:exec/rows.length,useful:(correct+reviewed)/rows.length,utility_per_1000:1000*utility/rows.length,worst_class_harm:worst,eligible_classes:eligibleClasses};
+}
+function s308Thresholds(family,dataset,regime,scale,K){
+  const key=`${family}|${dataset}|${regime}|${scale}`; const src=S308_ATLAS[key]||{}; return Array.from({length:K},(_,i)=>src[String(i)]??0.99);
+}
+function aggregateRun(method,cells){
+  const byDataset={}; for(const d of Object.keys(DATASETS))byDataset[d]=0;
+  let risk=true,cls=true,useful=true,utility=true,authority=true,reviewNonreg=true,strictReview=0;
+  for(const c of cells){
+    if(c.metrics.harm>TARGET_AGG+1e-12)risk=false;
+    if(c.metrics.worst_class_harm>TARGET_CLASS+1e-12)cls=false;
+    if(c.metrics.useful<0.10-1e-12)useful=false;
+    if(c.metrics.utility_per_1000<=0)utility=false;
+    if(c.metrics.invalid!==0)authority=false;
+    if(c.metrics.coverage>=0.01)byDataset[c.dataset]++;
+    if(c.metrics.utility_per_1000+1e-9<c.review_utility)reviewNonreg=false;
+    if(c.metrics.utility_per_1000>c.review_utility+1e-9)strictReview++;
+  }
+  const autonomy=Object.fromEntries(Object.entries(byDataset).map(([d,n])=>[d,n]));
+  const autonomyPass=Object.values(byDataset).every(n=>n>=12);
+  const complete=risk&&cls&&useful&&utility&&authority&&autonomyPass&&reviewNonreg&&strictReview>=18;
+  return {method,complete,risk,subgroup:cls,useful,utility,authority,autonomy,autonomy_pass:autonomyPass,review_nonregression:reviewNonreg,strict_review_advantage_cells:strictReview,worst_aggregate_harm:Math.max(...cells.map(c=>c.metrics.harm)),worst_class_harm:Math.max(...cells.map(c=>c.metrics.worst_class_harm)),min_useful:Math.min(...cells.map(c=>c.metrics.useful)),min_utility:Math.min(...cells.map(c=>c.metrics.utility_per_1000)),total_utility:sum(cells.map(c=>c.metrics.utility_per_1000))};
+}
+async function evaluateRun(secret,family,unit){
+  const cellsByMethod={candidate:[],global_ltt:[],s299:[],s308:[],review_only:[]};
+  for(const [dataset,K] of Object.entries(DATASETS)) for(const regime of REGIMES){
+    const discovery={},cert={},audit={},test={};
+    for(const scale of SCALES){
+      const nRef=scale, nDisc=scale, nCert=8*scale, nAudit=4*scale, nTest=scale;
+      const ref=generateRows(secret,family,unit,dataset,regime,scale,K,"ref",nRef);
+      const bank=buildRankBank(ref,K);
+      discovery[scale]=addRanks(generateRows(secret,family,unit,dataset,regime,scale,K,"disc",nDisc),bank);
+      cert[scale]=addRanks(generateRows(secret,family,unit,dataset,regime,scale,K,"cert",nCert),bank);
+      audit[scale]=addRanks(generateRows(secret,family,unit,dataset,regime,scale,K,"audit",nAudit),bank);
+      test[scale]=addRanks(generateRows(secret,family,unit,dataset,regime,scale,K,"test",nTest),bank);
+    }
+    const candidate=calibrateCandidate(discovery,cert,audit,K,family,dataset,regime);
+    const global=applyAuditVeto(calibrateGlobal(discovery,cert,K,family),audit,K,family);
+    for(const scale of SCALES){
+      const witnessCount=discovery[scale].length+cert[scale].length+audit[scale].length;
+      const methods={
+        candidate:candidate.thresholds[scale],
+        global_ltt:global.thresholds[scale],
+        s299:Array(K).fill(0.50),
+        s308:s308Thresholds(family,dataset,regime,scale,K),
+        review_only:Array(K).fill(1.0)
+      };
+      const reviewMetrics=route(test[scale],methods.review_only,"review_only",witnessCount);
+      for(const [m,ths] of Object.entries(methods)){
+        const metrics=route(test[scale],ths,m,witnessCount);
+        const policyMeta=m==="candidate"?{certified:candidate.certified,selected_kind:candidate.selected_kind,offset:candidate.offset,threshold:candidate.threshold,audit_pass:candidate.audit?.pass??false,portfolio_diagnostics:candidate.portfolio_diagnostics??null,thresholds:ths}:m==="global_ltt"?{certified:global.certified,threshold:global.threshold,thresholds:ths}:{thresholds:ths};
+        cellsByMethod[m].push({dataset,regime,scale,metrics,review_utility:reviewMetrics.utility_per_1000,policy_meta:policyMeta});
+      }
+    }
+  }
+  const q={}; for(const [m,cells] of Object.entries(cellsByMethod))q[m]=aggregateRun(m,cells);
+  const cand=q.candidate;
+  const comparatorStrict={};
+  for(const m of ["s299","s308","global_ltt"]){
+    let gains=0,regressions=0;
+    for(let i=0;i<cellsByMethod.candidate.length;i++){
+      const d=cellsByMethod.candidate[i].metrics.utility_per_1000-cellsByMethod[m][i].metrics.utility_per_1000;
+      if(d>1e-9)gains++; else if(d<-1e-9)regressions++;
+    }
+    comparatorStrict[m]={gains,regressions,total_utility_delta:cand.total_utility-q[m].total_utility};
+  }
+  const frozenComparatorAdvantage=["s299","s308"].every(m=>comparatorStrict[m].total_utility_delta>0&&

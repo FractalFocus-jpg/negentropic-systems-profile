@@ -1,0 +1,30 @@
+import { createHash, randomBytes } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import http from "node:http";
+
+const STABLE_ID = "R144-S311A-LTT-CDT-EXTERNAL-HOST-BLIND-PILOT-20261024-v2.4";
+const TITLE = "The Weather Field Belongs to the Evaluator";
+const DATASETS = { breast_cancer: 2, wine: 3, digits: 10 };
+const REGIMES = ["clean","noise_mild","noise_strong","mask_15","mask_35","scale_drift","prior_shift","tail_subgroup","compound_shift"];
+const SCALES = [800,2400];
+const FAMILIES = ["logistic","mlp_ensemble"];
+const THRESHOLD_GRID = Array.from({length:19},(_,i)=>Number((0.05*(i+1)).toFixed(2))).concat([0.99]);
+const OFFSETS = [0.30,0.25,0.20,0.15,0.10,0.05,0.00,-0.05,-0.10];
+const TARGET_AGG = 0.05;
+const TARGET_CLASS = 0.10;
+const CERT_LIMITS = {logistic:{aggregate:0.040,class_local:0.075},mlp_ensemble:{aggregate:0.030,class_local:0.050}};
+const DISC_LIMITS = {logistic:{aggregate:0.035,class_local:0.060},mlp_ensemble:{aggregate:0.025,class_local:0.040}};
+const DELTA = 0.01;
+const REVIEW_FRACTION = 0.15;
+const CORRECT_REWARD = 1.0;
+const ERROR_PENALTY = 20.0;
+const REVIEW_COST = 0.50;
+const WITNESS_COST = 0.00;
+const MIN_AGG_WITNESS = 120;
+const MIN_CLASS_WITNESS = 35;
+const AUDIT_LIMITS = {logistic:{aggregate:0.040,class_local:0.080},mlp_ensemble:{aggregate:0.025,class_local:0.040}};
+const MIN_AUDIT_AGG = 80;
+const MIN_AUDIT_CLASS = 25;
+const HIDDEN_UNITS_PER_FAMILY = 18;
+const S308_ATLAS = {"logistic|breast_cancer|clean|2400":{"0":0.17,"1":0.17},"logistic|breast_cancer|clean|800":{"0":0.17,"1":0.17},"logistic|breast_cancer|compound_shift|2400":{"0":0.38,"1":0.33},"logistic|breast_cancer|compound_shift|800":{"0":0.48,"1":0.38},"logistic|breast_cancer|mask_15|2400":{"0":0.27,"1":0.32},"logistic|breast_cancer|mask_15|800":{"0":0.25,"1":0.35},"logistic|breast_cancer|mask_35|2400":{"0":0.27,"1":0.3},"logistic|breast_cancer|mask_35|800":{"0":0.24,"1":0.34},"logistic|breast_cancer|noise_mild|2400":{"0":0.17,"1":0.2},"logistic|breast_cancer|noise_mild|800":{"0":0.17,"1":0.22},"logistic|breast_cancer|noise_strong|2400":{"0":0.27,"1":0.32},"logistic|breast_cancer|noise_strong|800":{"0":0.32,"1":0.35},"logistic|breast_cancer|prior_shift|2400":{"0":0.17,"1":0.2},"logistic|breast_cancer|prior_shift|800":{"0":0.17,"1":0.17},"logistic|breast_cancer|scale_drift|2400":{"0":0.71,"1":0.68},"logistic|breast_cancer|scale_drift|800":{"0":0.71,"1":0.68},"logistic|breast_cancer|tail_subgroup|2400":{"0":0.03,"1":0.03},"logistic|breast_cancer|tail_subgroup|800":{"0":0.03,"1":0.06},"logistic|digits|clean|2400":{"0":0.09,"1":0.09,"2":0.09,"3":0.09,"4":0.09,"5":0.09,"6":0.09,"7":0.09,"8":0.09,"9":0.09},"logistic|digits|clean|800":{"0":0.09,"1":0.09,"2":0.09,"3":0.09,"4":0.09,"5":0.09,"6":0.09,"7":0.09,"8":0.09,"9":0.09},"logistic|digits|compound_shift|2400":{"0":0.87,"1":0.87,"2":0.87,"3":0.87,"4":0.87,"5":0.87,"6":0.87,"7":0.87,"8":0.87,"9":0.92},"logistic|digits|compound_shift|800":{"0":0.66,"1":0.81,"2":0.66,"3":0.66,"4":0.66,"5":0.66,"6":0.66,"7":0.66,"8":0.66,"9":0.66},"logistic|digits|mask_15|2400":{"0":0.21,"1":0.41,"2":0.21,"3":0.21,"4":0.21,"5":0.21,"6":0.21,"7":0.21,"8":0.36,"9":0.24},"logistic|digits|mask_15|800":{"0":0.21,"1":0.41,"2":0.21,"3":0.21,"4":0.21,"5":0.21,"6":0.21,"7":0.21,"8":0.36,"9":0.41},"logistic|digits|mask_35|2400":{"0":0.72,"1":0.92,"2":0.72,"3":0.72,"4":0.72,"5":0.72,"6":0.72,"7":0.72,"8":0.72,"9":0.72},"logistic|digits|mask_35|800":{"0":0.6,"1":0.63,"2":0.6,"3":0.6,"4":0.6,"5":0.6,"6":0.6,"7":0.6,"8":0.7,"9":0.6},"logistic|digits|noise_mild|2400":{"0":0.14,"1":0.34,"2":0.14,"3":0.14,"4":0.14,"5":0.14,"6":0.14,"7":0.14,"8":0.14,"9":0.17},"logistic|digits|noise_mild|800":{"0":0.14,"1":0.34,"2":0.14,"3":0.14,"4":0.14,"5":0.14,"6":0.14,"7":0.14,"8":0.34,"9":0.17},"logistic|digits|noise_strong|2400":{"0":0.21,"1":0.41,"2":0.21,"3":0.21,"4":0.21,"5":0.21,"6":0.21,"7":0.21,"8":0.36,"9":0.21},"logistic|digits|noise_strong|800":{"0":0.21,"1":0.41,"2":0.21,"3":0.21,"4":0.21,"5":0.21,"6":0.21,"7":0.21,"8":0.41,"9":0.21},"logistic|digits|prior_shift|2400":{"0":0.09,"1":0.29,"2":0.09,"3":0.09,"4":0.09,"5":0.09,"6":0.09,"7":0.09,"8":0.09,"9":0.12},"logistic|digits|prior_shift|800":{"0":0.09,"1":0.24,"2":0.09,"3":0.09,"4":0.09,"5":0.09,"6":0.09,"7":0.09,"8":0.09,"9":0.12},"logistic|digits|scale_drift|2400":{"0":0.47,"1":0.85,"2":0.47,"3":0.47,"4":0.47,"5":0.47,"6":0.47,"7":0.47,"8":0.47,"9":0.67},"logistic|digits|scale_drift|800":{"0":0.48,"1":0.85,"2":0.48,"3":0.48,"4":0.48,"5":0.48,"6":0.48,"7":0.48,"8":0.68,"9":0.63},"logistic|digits|tail_subgroup|2400":{"0":0.47,"1":0.47,"2":0.47,"3":0.47,"4":0.47,"5":0.47,"6":0.47,"7":0.47,"8":0.57,"9":0.47},"logistic|digits|tail_subgroup|800":{"0":0.14,"1":0.34,"2":0.14,"3":0.14,"4":0.14,"5":0.14,"6":0.14,"7":0.14,"8":0.34,"9":0.14},"logistic|wine|clean|2400":{"0":0.1,"1":0.1,"2":0.1},"logistic|wine|clean|800":{"0":0.1,"1":0.1,"2":0.1},"logistic|wine|compound_shift|2400":{"0":0.999,"1":0.9,"2":0.9},"logistic|wine|compound_shift|800":{"0":0.9,"1":0.999,"2":0.9},"logistic|wine|mask_15|2400":{"0":0.22,"1":0.22,"2":0.22},"logistic|wine|mask_15|800":{"0":0.22,"1":0.22,"2":0.22},"logistic|wine|mask_35|2400":{"0":0.22,"1":0.22,"2":0.22},"logistic|wine|mask_35|800":{"0":0.22,"1":0.22,"2":0.22},"logistic|wine|noise_mild|2400":{"0":0.1,"1":0.1,"2":0.1},"logistic|wine|noise_mild|800":{"0":0.1,"1":0.2,"2":0.1},"logistic|wine|noise_strong|2400":{"0":0.22,"1":0.22,"2":0.22},"logistic|wine|noise_strong|800":{"0":0.22,"1":0.22,"2":0.22},"logistic|wine|prior_shift|2400":{"0":0.1,"1":0.1,"2":0.1},"logistic|wine|prior_shift|800":{"0":0.1,"1":0.1,"2":0.1},"logistic|wine|scale_drift|2400":{"0":0.999,"1":0.999,"2":0.999},"logistic|wine|scale_drift|800":{"0":0.999,"1":0.999,"2":0.999},"logistic|wine|tail_subgroup|2400":{"0":0.09,"1":0.09,"2":0.09},"logistic|wine|tail_subgroup|800":{"0":0.09,"1":0.09,"2":0.09},"mlp_ensemble|breast_cancer|clean|2400":{"0":0.19,"1":0.19},"mlp_ensemble|breast_cancer|clean|800":{"0":0.19,"1"
